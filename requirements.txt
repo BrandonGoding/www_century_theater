@@ -1,3 +1,6 @@
 django
 wagtail
 python-decouple
+PyMySQL
+django-debug-toolbar
+black
