@@ -25,6 +25,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.spl
 INSTALLED_APPS = [
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
+    'wagtail.contrib.routable_page',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',

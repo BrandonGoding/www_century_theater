@@ -28,40 +28,25 @@
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Link
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Link</a>
+          <a class="nav-link" href="#">Blog</a>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+{#      <form class="d-flex">#}
+{#        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
+{#        <button class="btn btn-outline-success" type="submit">Search</button>#}
+{#      </form>#}
     </div>
   </div>
 </nav>
 
 {% block content %}
-
-            <!-- Page Content-->
+    <!-- Page Content-->
         <div class="container px-4 px-lg-5">
             <!-- Heading Row-->
             <div class="row gx-4 gx-lg-5 align-items-center my-5">
-                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
+                <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="{% static 'assets/img/background-img.png' %}" alt="..." /></div>
                 <div class="col-lg-5">
-                    <h1 class="font-weight-light">Business Name or Tagline</h1>
+                    <h1 class="font-weight-light">The Century Theater</h1>
                     <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
                     <a class="btn btn-primary" href="#!">Call to Action!</a>
                 </div>

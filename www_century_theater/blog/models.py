@@ -2,6 +2,7 @@ from django import forms
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
 from wagtail.admin.edit_handlers import MultiFieldPanel, FieldPanel
+from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -112,14 +113,34 @@ class BlogCategory(models.Model):
         return self.name
 
 
-class BlogRollPage(Page):
+class BlogRollPage(RoutablePageMixin, Page):
     max_count = 1
     subpage_types = ['blog.BlogPage']
+
+    @route(r'^$')  # will override the default Page serving mechanism
+    def recent_posts(self, request):
+        """
+        View function for the current events page
+        """
+        featured_post = BlogPage.objects.live()[:1]
+        posts = BlogPage.objects.live()[1:5]
+        return self.render(request, context_overrides={
+            'featured_post': featured_post,
+            'posts': posts,
+        })
 
 
 class BlogPage(Page):
     #author = models.ForeignKey(to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL)
     categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
+    post_date = models.DateField(auto_created=True, null=False, blank=False)
+    featured_image = models.ForeignKey(
+        "wagtailimages.Image",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False,
+        related_name="+",
+    )
     content = RichTextField(
         blank=True,
         null=True,
@@ -154,9 +175,15 @@ class BlogPage(Page):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("categories", widget=forms.CheckboxSelectMultiple)
+                FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
             ],
             heading="Categories"
+        ),
+        MultiFieldPanel(
+            [
+                ImageChooserPanel("featured_image"),
+            ],
+            heading="Featured Image"
         )
     ]
 
