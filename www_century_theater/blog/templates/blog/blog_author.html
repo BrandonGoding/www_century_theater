@@ -1,5 +1,5 @@
 {% extends 'website/base.html' %}
-{% load static wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block extra_css %}
       <!-- Font Awesome icons (free version)-->
@@ -36,27 +36,11 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
-                        {{ author.bio|safe }}
+                        {{ author.bio|richtext  }}
                     </div>
                 </div>
             </div>
         </article>
 
-        <div class="container-fluid">
-            <div class="row">
-                {% for post in posts %}
-                <div class="col-lg-3">
-                    <div class="card mb-4">
-                        <a href="{{ post.url }}">{% image post.featured_image fill-700x350-c100 class="card-img-top" %}</a>
-                        <div class="card-body">
-                            <div class="small text-muted">{{ post.post_date|date:"l F d, Y"  }}</div>
-                            <h2 class="card-title h4">{{ post.title }}</h2>
-                            <p class="card-text">{{ post.content|striptags|safe|truncatewords:15 }}</p>
-                            <a class="btn btn-primary" href="{{ post.url }}">Read more →</a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% include 'blog/partials/related_posts_block.html' %}
 {% endblock %}

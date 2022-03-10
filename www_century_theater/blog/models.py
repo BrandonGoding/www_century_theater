@@ -157,7 +157,7 @@ class BlogRollPage(RoutablePageMixin, Page):
         posts = BlogPage.objects.filter(author__slug=author_slug).live()[:4]
         return self.render(request, context_overrides={
             'author': author,
-            'posts': posts,
+            'related_posts': posts,
         }, template=template)
 
     @route(r'^categories/(?P<category_slug>[-\w]*)/$')  # will override the default Page serving mechanism
@@ -239,8 +239,16 @@ class BlogPage(Page):
     parent_page_types = ['blog.BlogRollPage']
     subpage_types = []
 
+    @property
+    def category_list(self):
+        cat_list = []
+        for cat in self.categories.all():
+            cat_list.append(cat.id)
+        return cat_list
+
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
         context['routable_target'] = self.get_parent().specific
+        context['related_posts'] = BlogPage.objects.filter(categories__in=self.category_list).live()[:4]
         return context
