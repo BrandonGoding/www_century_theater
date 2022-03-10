@@ -60,6 +60,7 @@ class BlogAuthor(models.Model):
                 FieldPanel("first_name"),
                 FieldPanel("slug"),
                 ImageChooserPanel("image"),
+                FieldPanel("tagline"),
                 FieldPanel("bio"),
             ],
             heading="Author Name, Image and Bio",

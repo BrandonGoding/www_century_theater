@@ -50,7 +50,7 @@
                         </div>
                         {% endif %}
                     {% endfor %}
-                    {% if posts %}
+                    {% if False %}
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
                         <hr class="my-0" />
@@ -69,15 +69,7 @@
                 <!-- Side widgets-->
                 <div class="col-lg-4">
                     <!-- Search widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Search</div>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'blog/partials/site_search_block.html' %}
                     <!-- Categories widget-->
                     {% include 'blog/partials/blog_categories_block.html' %}
                 </div>

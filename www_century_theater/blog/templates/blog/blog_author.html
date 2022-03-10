@@ -47,7 +47,7 @@
                 {% for post in posts %}
                 <div class="col-lg-3">
                     <div class="card mb-4">
-                        <a href="{{ post.url }}">{% image post.featured_image fill-700x350-c75 class="card-img-top" %}</a>
+                        <a href="{{ post.url }}">{% image post.featured_image fill-700x350-c100 class="card-img-top" %}</a>
                         <div class="card-body">
                             <div class="small text-muted">{{ post.post_date|date:"l F d, Y"  }}</div>
                             <h2 class="card-title h4">{{ post.title }}</h2>
