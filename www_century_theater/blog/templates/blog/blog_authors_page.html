@@ -1,10 +1,61 @@
 {% extends 'website/base.html' %}
-{% load static %}
+{% load static wagtailimages_tags wagtailroutablepage_tags %}
 
 
 {% block content %}
 
-BLOCK AUTHORS PAGE
+ <!-- Page header with logo and tagline-->
+        <header class="py-5 bg-light border-bottom mb-4">
+            <div class="container">
+                <div class="text-center my-5">
+                    <h1 class="fw-bolder">The Century Theater Crew!</h1>
+                    <p class="lead mb-0">The lady behind the counter in a small town.</p>
+                </div>
+            </div>
+        </header>
+        <!-- Page content-->
+        <div class="container">
+            <div class="row">
+                <!-- Blog entries-->
+                <div class="col-lg-8">
+                    <!-- Featured blog post-->
+                    {% for post in posts %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                        <div class="row">
+                        {% endif %}
+                        <div class="col-lg-6">
+                            <div class="card mb-4">
+                                <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-700x350-c75 class="card-img-top" %}</a>
+                                <div class="card-body">
+                                    <div class="small text-muted">{{ post.tagline }}</div>
+                                    <h2 class="card-title h4">{{ post.full_name }}</h2>
+                                    <p class="card-text">{{ post.bio|striptags|safe|truncatewords:15 }}</p>
+                                    <a class="btn btn-primary" href="{% routablepageurl page "recent_posts_by_author" post.slug %}">Read more →</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% if forloop.counter|divisibleby:2 or forloop.last %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- Side widgets-->
+                <div class="col-lg-4">
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Categories widget-->
+                    {% include 'blog/partials/blog_categories_block.html' %}
+                </div>
+            </div>
+        </div>
 
 
 {% endblock %}

@@ -1,0 +1,25 @@
+<div class="card mb-4">
+    <div class="card-header">Categories</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <ul class="list-unstyled mb-0">
+                    {% for category in categories %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                            <li><a href="#!">{{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                <ul class="list-unstyled mb-0">
+                    {% for category in categories %}
+                        {% if forloop.counter|divisibleby:2 %}
+                            <li><a href="#!">{{ category.name }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
