@@ -1,3 +1,4 @@
+{% load  wagtailroutablepage_tags  %}
 <div class="card mb-4">
     <div class="card-header">Categories</div>
     <div class="card-body">
@@ -6,7 +7,7 @@
                 <ul class="list-unstyled mb-0">
                     {% for category in categories %}
                         {% if not forloop.counter|divisibleby:2 %}
-                            <li><a href="#!">{{ category.name }}</a></li>
+                            <li><a href="{% routablepageurl routable_target "recent_posts_by_category" category.slug %}">{{ category.name }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -15,7 +16,7 @@
                 <ul class="list-unstyled mb-0">
                     {% for category in categories %}
                         {% if forloop.counter|divisibleby:2 %}
-                            <li><a href="#!">{{ category.name }}</a></li>
+                            <li><a href="{% routablepageurl routable_target "recent_posts_by_category" category.slug %}">{{ category.name }}</a></li>
                         {% endif %}
                     {% endfor %}
                 </ul>

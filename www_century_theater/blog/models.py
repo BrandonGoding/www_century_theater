@@ -123,6 +123,7 @@ class BlogRollPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super(BlogRollPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
+        context['routable_target'] = self.get_latest_revision_as_page().specific
         return context
 
     @route(r'^$')  # will override the default Page serving mechanism
@@ -157,6 +158,23 @@ class BlogRollPage(RoutablePageMixin, Page):
             'author': author,
             'posts': posts,
         }, template=template)
+
+    @route(r'^categories/(?P<category_slug>[-\w]*)/$')  # will override the default Page serving mechanism
+    def recent_posts_by_category(self, request, category_slug):
+        """
+        View function for the current events page
+        """
+        try:
+            category = BlogCategory.objects.get(slug=category_slug)
+            featured_post = BlogPage.objects.filter(categories__in=[category.id]).live()[:1]
+            posts = BlogPage.objects.filter(categories__in=[category.id]).live()[1:5]
+        except:
+            featured_post = []
+            posts = []
+        return self.render(request, context_overrides={
+            'featured_post': featured_post,
+            'posts': posts,
+        })
 
 
 class BlogPage(Page):
@@ -198,6 +216,7 @@ class BlogPage(Page):
         MultiFieldPanel(
             [
                 SnippetChooserPanel('author'),
+                FieldPanel('post_date'),
                 FieldPanel('content'),
             ],
             heading="Author & Content"
@@ -222,4 +241,5 @@ class BlogPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
+        context['routable_target'] = self.get_parent().specific
         return context
