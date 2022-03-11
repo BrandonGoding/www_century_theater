@@ -1,5 +1,7 @@
 from wagtail.core import blocks
+from wagtail.core.blocks import PageChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
+
 
 
 class ParallaxBlock(blocks.StructBlock):
@@ -27,3 +29,29 @@ class FeaturesListBlock(blocks.StructBlock):
     class Meta:
         icon = "edit"
         template = "streams/features_list_block.html"
+
+
+class TeamHighlightBlock(blocks.StructBlock):
+
+    team = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("full_name", blocks.CharBlock(max_length=25, required=True)),
+                ("position", blocks.CharBlock(max_length=25, required=True)),
+                ("team_member_photo", ImageChooserBlock(required=True)),
+                ("bio_page", blocks.URLBlock(required=False))
+            ]
+        )
+    )
+
+    class Meta:
+        icon = "edit"
+        template = "streams/team_hightlight_block.html"
+
+
+class RecentPostsBlock(blocks.StructBlock):
+
+    class Meta:
+        icon = "edit"
+        template = "streams/recent_post_block.html"
+

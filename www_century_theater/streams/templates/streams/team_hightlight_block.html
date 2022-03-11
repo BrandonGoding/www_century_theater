@@ -1,0 +1,25 @@
+{% load wagtailimages_tags %}
+        <section class="testimonials text-center bg-light" style="padding:75px 0;">
+            <div class="container">
+                <h2 class="mb-5">Meet The Century Theater Team</h2>
+                <div class="row" style="display: flex;justify-content: center;">
+
+                    {% for person in self.team %}
+                    <div class="col-lg-3" style="margin-bottom:75px;">
+                        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                            {% image person.team_member_photo fill-150x150-c50 as tmp_photo %}
+                            {% if person.bio_page %}
+                            <a href="{{ person.bio_page }}">
+                            {% endif %}
+                            <img class="img-fluid rounded-circle mb-3" src="{{ tmp_photo.url }}" alt="..." />
+                            <h5>{{ person.full_name }}</h5>
+                            <p class="font-weight-light mb-0">{{ person.position }}</p>
+                             {% if person.bio_page %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                   {% endfor %}
+                </div>
+            </div>
+        </section>
