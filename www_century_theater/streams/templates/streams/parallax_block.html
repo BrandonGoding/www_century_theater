@@ -4,5 +4,10 @@
 <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
     <h1>{{ self.header }}</h1>
     <h2>{{ self.sub_header }}</h2>
-{#    <a class="btn btn-large btn-primary">Test Button</a>#}
+    {% if self.header %}
+        <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
+            <a class="btn btn-large btn-primary" >Now Playing</a>
+            <a class="btn btn-large btn-outline-light" >Coming Soon</a>
+        </div>
+    {% endif %}
 </div>
