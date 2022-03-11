@@ -1,0 +1,8 @@
+{% load wagtailimages_tags %}
+{% image self.background_image original as tmp_photo %}
+
+<div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
+    <h1>{{ self.header }}</h1>
+    <h2>{{ self.sub_header }}</h2>
+{#    <a class="btn btn-large btn-primary">Test Button</a>#}
+</div>

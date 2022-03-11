@@ -1,1 +1,47 @@
 {% extends 'website/base.html' %}
+{% load wagtailcore_tags static %}
+
+{% block extra_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{% static 'assets/css/heroic_features_block.css' %}" rel="stylesheet" />
+    <style>
+    .parallax {
+        /* Set a specific height */
+        min-height: 500px;
+
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: rgba(0, 0, 0,  0.75);
+        background-blend-mode: overlay;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .parallax > h1 {
+        color:white;
+        max-width: 800px;
+        text-align:center;
+    }
+    .parallax > h2 {
+        color: white;
+        max-width: 800px;
+        text-align:center;
+    }
+
+    .features-section{
+        margin: 75px 0;
+    }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    {% for block in page.body %}
+        {% include_block block %}
+    {% endfor %}
+{% endblock %}

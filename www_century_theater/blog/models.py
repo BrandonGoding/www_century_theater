@@ -132,8 +132,8 @@ class BlogRollPage(RoutablePageMixin, Page):
         """
         View function for the current events page
         """
-        featured_post = BlogPage.objects.live()[:1]
-        posts = BlogPage.objects.live()[1:5]
+        featured_post = BlogPage.objects.order_by('-post_date').live()[:1]
+        posts = BlogPage.objects.order_by('-post_date').live()[1:5]
         return self.render(request, context_overrides={
             'featured_post': featured_post,
             'posts': posts,
@@ -154,7 +154,7 @@ class BlogRollPage(RoutablePageMixin, Page):
     def recent_posts_by_author(self, request, author_slug):
         template = 'blog/blog_author.html'
         author = BlogAuthor.objects.get(slug=author_slug)
-        posts = BlogPage.objects.filter(author__slug=author_slug).live()[:4]
+        posts = BlogPage.objects.order_by('-post_date').filter(author__slug=author_slug).live()[:4]
         return self.render(request, context_overrides={
             'author': author,
             'related_posts': posts,
@@ -167,8 +167,8 @@ class BlogRollPage(RoutablePageMixin, Page):
         """
         try:
             category = BlogCategory.objects.get(slug=category_slug)
-            featured_post = BlogPage.objects.filter(categories__in=[category.id]).live()[:1]
-            posts = BlogPage.objects.filter(categories__in=[category.id]).live()[1:5]
+            featured_post = BlogPage.objects.order_by('-post_date').filter(categories__in=[category.id]).live()[:1]
+            posts = BlogPage.objects.order_by('-post_date').filter(categories__in=[category.id]).live()[1:5]
         except:
             featured_post = []
             posts = []
@@ -250,5 +250,5 @@ class BlogPage(Page):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
         context['routable_target'] = self.get_parent().specific
-        context['related_posts'] = BlogPage.objects.filter(categories__in=self.category_list).live()[:4]
+        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(categories__in=self.category_list).exclude(id=self.id).live()[:4]
         return context
