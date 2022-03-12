@@ -3,11 +3,18 @@ from wagtail.core.blocks import PageChooserBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 
-
 class ParallaxBlock(blocks.StructBlock):
     header = blocks.CharBlock(max_length=30, required=False)
     sub_header = blocks.CharBlock(max_length=250, required=False)
     background_image = ImageChooserBlock(required=True)
+    links = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("link_text", blocks.CharBlock(max_length=25, required=False)),
+                ("link_page", PageChooserBlock(required=False))
+            ]
+        )
+    )
 
     class Meta:
         icon = 'edit'

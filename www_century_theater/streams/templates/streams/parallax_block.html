@@ -4,10 +4,11 @@
 <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
     <h1>{{ self.header }}</h1>
     <h2>{{ self.sub_header }}</h2>
-    {% if self.header %}
+    {% if self.links %}
         <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
-            <a class="btn btn-large btn-primary" >Now Playing</a>
-            <a class="btn btn-large btn-outline-light" >Coming Soon</a>
+            {% for link in self.links %}
+            <a href="{{ link.link_page.url }}" class="btn btn-large {% if forloop.first %}btn-primary{% else %}btn-outline-light{% endif %}" >{{ link.link_text }}</a>
+            {% endfor %}
         </div>
     {% endif %}
 </div>

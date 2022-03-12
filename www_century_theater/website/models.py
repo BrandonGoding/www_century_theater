@@ -17,7 +17,7 @@ class BasicPage(Page):
         StreamFieldPanel('body'),
     ]
 
-    def get_context(self, value):
+    def get_context(self, value, *args, **kwargs):
         context = super(BasicPage, self).get_context(value)
         context['featured_post'] = BlogPage.objects.order_by('-post_date').live()[:1]
         context['second_post'] = BlogPage.objects.order_by('-post_date').live()[1:2]
