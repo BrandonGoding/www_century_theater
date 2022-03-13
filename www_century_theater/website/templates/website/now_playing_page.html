@@ -1,0 +1,92 @@
+{% extends 'website/base.html' %}
+{% load static wagtailimages_tags %}
+{% image self.featured_image original as tmp_photo %}
+
+
+{% block extra_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="{% static 'assets/css/heroic_features_block.css' %}" rel="stylesheet" />
+    <style>
+    .parallax {
+        /* Set a specific height */
+        min-height: 500px;
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: rgba(0, 0, 0,  0.75);
+        background-blend-mode: overlay;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+    }
+    .parallax > h1 {
+        z-index: 2;
+        color:white;
+        max-width: 800px;
+        text-align:center;
+    }
+    .parallax > h2 {
+        z-index: 2;
+        color: white;
+        max-width: 800px;
+        text-align:center;
+    }
+
+    .parallax-bg {
+        z-index: 2;
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: rgba(0, 0, 0,  0.75);
+        background-blend-mode: overlay;
+    }
+
+    .parallax > .parallax-left {
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+    }
+
+    .parallax > .parallax-right {
+        position:absolute;
+        top:0;
+        left:50%;
+        right:0;
+        bottom:0;
+        border-bottom-left-radius: 900px;
+    }
+
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
+     <div class="parallax">
+         {% for movie in now_playing %}
+            {% image movie.featured_image original as tmp_photo %}
+            <div class="parallax-{% if forloop.first %}left{% else %}right{% endif %} parallax-bg" style="background-image:url('{{ tmp_photo.url }}')"></div>
+         {% endfor %}
+     <h1>Now Playing</h1>
+    <h2>{{ self.first_day_of_week }} - {{ self.last_day_of_week }}</h2>
+
+        <div style="z-index:2;margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;color:white;">
+            {% for title in now_playing %}
+                <div>
+                    <h3 class="text-center">{{ title.title }}</h3>
+                    <a href="" class="btn btn-primary btn-sm">View the Trailer</a>
+                    <a href="" class="btn btn-outline-light btn-sm">More Info</a>
+                </div>
+            {% endfor %}
+        </div>
+
+     </div>
+{% endblock %}
