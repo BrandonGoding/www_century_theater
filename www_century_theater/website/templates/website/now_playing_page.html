@@ -1,5 +1,5 @@
 {% extends 'website/base.html' %}
-{% load static wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 {% image self.featured_image original as tmp_photo %}
 
 
@@ -83,10 +83,15 @@
                 <div>
                     <h3 class="text-center">{{ title.title }}</h3>
                     <a href="" class="btn btn-primary btn-sm">View the Trailer</a>
-                    <a href="" class="btn btn-outline-light btn-sm">More Info</a>
+                    <a href="{{ title.url }}" class="btn btn-outline-light btn-sm">More Info</a>
                 </div>
             {% endfor %}
         </div>
 
      </div>
+
+    {% for block in page.body %}
+        {% include_block block %}
+    {% endfor %}
+
 {% endblock %}

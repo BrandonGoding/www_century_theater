@@ -62,3 +62,19 @@ class RecentPostsBlock(blocks.StructBlock):
         icon = "edit"
         template = "streams/recent_post_block.html"
 
+
+class StudiosBlock(blocks.StructBlock):
+
+    studios = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("name", blocks.CharBlock(max_length=25, required=True)),
+                ("logo", ImageChooserBlock(required=True)),
+                ("website", blocks.URLBlock(required=True))
+            ]
+        )
+    )
+
+    class Meta:
+        icon = "edit"
+        template = "streams/studios_block.html"

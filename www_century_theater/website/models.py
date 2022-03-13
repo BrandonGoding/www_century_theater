@@ -6,7 +6,7 @@ from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
 from blog.models import BlogPage
-from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock
+from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock, StudiosBlock
 
 
 class BasicPage(Page):
@@ -62,7 +62,17 @@ class Movie(Page):
     subpage_types = []
 
 
-class NowPlayingPage(RoutablePageMixin, Page):
+class NowPlayingPage(Page):
+    body = StreamField([
+        ('feature_list_section', FeaturesListBlock()),
+        ('recent_post_section', RecentPostsBlock()),
+        ('studio_logo_section', StudiosBlock()),
+    ], null=True, blank=True)
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('body'),
+    ]
+
     max_count = 1
 
     subpage_types = ['website.Movie']
@@ -76,13 +86,6 @@ class NowPlayingPage(RoutablePageMixin, Page):
     def last_day_of_week(self):
         current_day = datetime.date.today()
         return current_day - datetime.timedelta(days=current_day.weekday()) + datetime.timedelta(days=6)
-
-    @route(r'^$')  # will override the default Page serving mechanism
-    def now_playing_page(self, request):
-        """
-        View function for the current events page
-        """
-        return self.render(request, context_overrides={})
 
     def get_context(self, value, *args, **kwargs):
         context = super(NowPlayingPage, self).get_context(value)

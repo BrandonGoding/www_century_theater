@@ -1,0 +1,19 @@
+{% load wagtailimages_tags %}
+<section class="testimonials text-center bg-light" style="padding:75px 0;">
+    <div class="container">
+        <h2 class="mb-5">Our Studios</h2>
+        <div class="row" style="display: flex;justify-content: center;align-items:flex-end;">
+            {% for studio in self.studios %}
+            <div class="col-lg-3" style="margin-bottom:75px;">
+                <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                    {% image studio.logo height-150 as tmp_photo %}
+                    <a href="#">
+                    <img class="img-fluid mb-3" src="{{ tmp_photo.url }}" alt="..." />
+                    <h5>{{ studio.name }}</h5>
+                    </a>
+                </div>
+            </div>
+           {% endfor %}
+        </div>
+    </div>
+</section>
