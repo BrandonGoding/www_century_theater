@@ -49,4 +49,24 @@
         </div>
     {% endif %}
 </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+            &nbsp;
+            </div>
+            <div class="col-md-4">
+                <h4>Show Times:</h4>
+                <ul>
+                    {% for showtime in self.showtimes.all %}
+                        <li>
+                            {{ showtime.show_date }} -- {{ showtime.show_time }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
 {% endblock %}

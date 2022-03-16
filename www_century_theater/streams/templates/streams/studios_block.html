@@ -7,7 +7,7 @@
             <div class="col-lg-3" style="margin-bottom:75px;">
                 <div class="testimonial-item mx-auto mb-5 mb-lg-0">
                     {% image studio.logo height-150 as tmp_photo %}
-                    <a href="#">
+                    <a href="{{ studio.website }}">
                     <img class="img-fluid mb-3" src="{{ tmp_photo.url }}" alt="..." />
                     <h5>{{ studio.name }}</h5>
                     </a>

@@ -1,9 +1,11 @@
 import datetime
+from django.utils import timezone
 from django.db import models
-from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel
+from modelcluster.fields import ParentalKey
+from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField
-from wagtail.core.models import Page
+from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from blog.models import BlogPage
 from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock, StudiosBlock
@@ -29,6 +31,21 @@ class BasicPage(Page):
         return context
 
 
+class ShowTime(Orderable):
+    """Between 1 and 5 images for the home page carousel."""
+
+    page = ParentalKey("website.Movie", related_name="showtimes")
+    show_date = models.DateField(default=timezone.now())
+    show_time = models.TimeField()
+    matinee = models.BooleanField(default=False)
+
+    panels = [
+        FieldPanel('show_date'),
+        FieldPanel('show_time'),
+        FieldPanel('matinee')
+    ]
+
+
 class Movie(Page):
     RATING_CHOICES = (
         ("G - General Audiences", "G"),
@@ -46,6 +63,8 @@ class Movie(Page):
         related_name='+'
     )
     youtube_id = models.CharField(max_length=25, null=True, blank=True)
+    open_date = models.DateField(null=True, blank=True)
+    close_date = models.DateField(null=True, blank=True)
 
     content_panels = [
         MultiFieldPanel(
@@ -53,10 +72,18 @@ class Movie(Page):
                 FieldPanel('title'),
                 FieldPanel('rating'),
                 ImageChooserPanel('featured_image'),
-                FieldPanel('youtube_id')
+                FieldPanel('youtube_id'),
+                FieldPanel('open_date'),
+                FieldPanel('close_date'),
             ],
             heading="Movie Header Info"
         ),
+        MultiFieldPanel(
+            [
+                InlinePanel("showtimes", label="ShowTime")
+            ],
+            heading="Showtimes"
+        )
     ]
     parent_page_types = ['website.NowPlayingPage', 'website.ComingSoonPage']
     subpage_types = []
@@ -89,7 +116,7 @@ class NowPlayingPage(Page):
 
     def get_context(self, value, *args, **kwargs):
         context = super(NowPlayingPage, self).get_context(value)
-        context['now_playing'] = Movie.objects.all().live()[:2]
+        context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).live()[:2]
         return context
 
 

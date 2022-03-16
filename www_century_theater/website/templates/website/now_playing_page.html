@@ -66,6 +66,11 @@
 
     </style>
 
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"
+    />
+
 {% endblock %}
 
 
@@ -82,16 +87,21 @@
             {% for title in now_playing %}
                 <div>
                     <h3 class="text-center">{{ title.title }}</h3>
-                    <a href="" class="btn btn-primary btn-sm">View the Trailer</a>
+                    <!-- YouTube -->
+                    <a data-fancybox="video-gallery" href="https://www.youtube.com/watch?v={{  title.youtube_id }}" class="btn btn-primary btn-sm">View the Trailer</a>
                     <a href="{{ title.url }}" class="btn btn-outline-light btn-sm">More Info</a>
                 </div>
             {% endfor %}
         </div>
-
      </div>
 
     {% for block in page.body %}
         {% include_block block %}
     {% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+ <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 {% endblock %}
