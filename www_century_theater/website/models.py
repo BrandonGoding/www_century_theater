@@ -9,6 +9,9 @@ from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 from blog.models import BlogPage
 from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock, StudiosBlock
+from django.conf import settings as django_settings
+import os
+import json
 
 
 class BasicPage(Page):
@@ -63,6 +66,7 @@ class Movie(Page):
         related_name='+'
     )
     youtube_id = models.CharField(max_length=25, null=True, blank=True)
+    imdb_id = models.CharField(max_length=25, null=True, blank=True)
     open_date = models.DateField(null=True, blank=True)
     close_date = models.DateField(null=True, blank=True)
     review_page = models.ForeignKey(
@@ -80,6 +84,7 @@ class Movie(Page):
                 FieldPanel('rating'),
                 ImageChooserPanel('featured_image'),
                 FieldPanel('youtube_id'),
+                FieldPanel('imdb_id'),
                 FieldPanel('open_date'),
                 FieldPanel('close_date'),
             ],
@@ -110,8 +115,6 @@ class Movie(Page):
             if show_date.show_date not in show_dates:
                 show_dates.append(show_date.show_date)
 
-        print(show_dates)
-
         for show_date in show_dates:
             time_list = []
             temp_dict = dict()
@@ -122,6 +125,19 @@ class Movie(Page):
             showtimes.append(temp_dict)
 
         context['showtimes'] = showtimes
+
+        if self.imdb_id:
+            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json'):
+                print("FILE MISSING DO API CALL")
+            else:
+                # Opening JSON file
+                f = open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json')
+
+                # returns JSON object as
+                # a dictionary
+                context['imdb_title_data'] = json.load(f)
+                # Closing file
+                f.close()
         return context
 
 

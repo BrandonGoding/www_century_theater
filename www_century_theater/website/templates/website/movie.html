@@ -45,7 +45,7 @@
     {% image self.featured_image original as tmp_photo %}
     <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
     <h1>{{ self.title }}</h1>
-    <h2>{{ self.rating }}</h2>
+    <h2>{% if imdb_title_data.tagline %}{{ imdb_title_data.tagline }} <br/>{% endif %}<small>{{ self.rating }}</small></h2>
     {% if self.links %}
         <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
             {% for link in self.links %}
@@ -56,30 +56,82 @@
 </div>
 
     <div class="container">
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-md-8">
-            &nbsp;{% if showtimes %}
-                <h4>Show Times:</h4>
-                <ul style="list-style-type:none;width:100%;display: flex; flex-wrap: wrap;justify-content: space-evenly;">
+            {% if imdb_title_data %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{{ imdb_title_data.image }}" class="img-fluid mt-4" />
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mt-4">Movie Details:</h4>
+                <h5>{{ imdb_title_data.fullTitle }} - {{ imdb_title_data.runtimeStr }}</h5>
+                <h6>Directors: {{ imdb_title_data.directors }}</h6>
+                <h6>Writers: {{ imdb_title_data.writers }}</h6>
+                <h6>Starring: {{ imdb_title_data.stars }}</h6>
+                <p>{{ imdb_title_data.plot }}</p>
+                <div class="row">
+                    {% if imdb_title_data.boxOffice.budget %}
+                    <div class="col-3">
+                        <h6>Budget<br/><small>{{ imdb_title_data.boxOffice.budget }}</small></h6>
+                    </div>
+                    {% endif %}
+                    {% if imdb_title_data.boxOffice.openingWeekendUSA %}
+                    <div class="col-3">
+                        <h6>Opening Weekend USA<br/><small>{{ imdb_title_data.boxOffice.openingWeekendUSA }}</small></h6>
+                    </div>
+                    {% endif %}
+                    {% if imdb_title_data.boxOffice.openingWeekendUSA %}
+                    <div class="col-3">
+                        <h6>Gross USA<br/><small>{{ imdb_title_data.boxOffice.grossUSA }}</small></h6>
+                    </div>
+                    {% endif %}
+                    {% if imdb_title_data.boxOffice.cumulativeWorldwideGross %}
+                    <div class="col-3">
+                        <h6>Gross Worldwide<br/><small>{{ imdb_title_data.boxOffice.cumulativeWorldwideGross }}</small></h6>
+                    </div>
+                    </div>
+                </div>
+                    {% endif %}
+                </div>
+
+                <div class="row mt-4">
+                {% for actor in imdb_title_data.actorList %}
+                    {% if actor.name in imdb_title_data.stars %}
+                    <div class="col-md-4">
+                     <div class="card mb-4">
+                        <img src="{{ actor.image }}" class="card-img-top">
+                        <div class="card-body">
+                            <h2 class="card-title h4">{{ actor.name }}</h2>
+                        </div>
+                    </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+
+            {% endif %}
+            </div>
+            <div class="col-md-4">
+            {% if showtimes %}
+                <h4 class="mt-4">Show Times:</h4>
+                <ul>
                     {% for showtime in showtimes %}
-                        <li class="mt-2" style="width:100%;max-width: 350px;">
-                            <span class="badge bg-primary" style="width:100%;"><h4>{{ showtime.date|date:"l, F j, Y" }}</h4>
-                            <ul style="padding:0;list-style-type:none;display: flex;align-items: center;justify-content: center;">
+                        <li class="mt-2">
+                            <h6>{{ showtime.date|date:"l, F j, Y" }}</h6>
+                            <ul >
                                 {% for time in showtime.times %}
-                                    <li style="margin-left:15px;">
-                                        <span class="badge bg-dark"><h5>{{ time|date:"g:i A"  }}</h5></span>
+                                    <li>
+                                        {{ time|date:"g:i A"  }}
                                     </li>
                                 {% endfor %}
                             </ul>
-                        </span>
                         </li>
                     {% endfor %}
                 </ul>
-                {% endif %}
-            </div>
-            <div class="col-md-4">
+            {% endif %}
             {% if self.youtube_id %}
-                <h4 class="mt-4">Trailer:</h4>
                 <div class="row mb-4">
                     <div class="col">
                         <div style="background-color:white;background-image:url('{{ tmp_photo.url }}');background-size:cover;">
@@ -91,11 +143,9 @@
                 </div>
             {% endif %}
             {% if self.review_page %}
-                <h4 class="mt-4">Review:</h4>
                 <div class="row mb-4">
                     <div class="col">
                             <div class="card mb-4">
-                                <a href="{{ self.review_page.url }}">{% image self.review_page.featured_image fill-700x350-c100 class="card-img-top img-flud" %}</a>
                                 <div class="card-body">
                                     <div class="small text-muted">{{ self.review_page.post_date|date:"l F d, Y"  }}</div>
                                     <h2 class="card-title h5">{{ self.review_page.title }}</h2>
