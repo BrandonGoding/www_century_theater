@@ -33,7 +33,12 @@
     }
 
     </style>
-
+{% if self.youtube_id %}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"
+    />
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -53,20 +58,48 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-            &nbsp;
-            </div>
-            <div class="col-md-4">
+            &nbsp;{% if showtimes %}
                 <h4>Show Times:</h4>
-                <ul>
-                    {% for showtime in self.showtimes.all %}
-                        <li>
-                            {{ showtime.show_date }} -- {{ showtime.show_time }}
+                <ul style="list-style-type:none;width:100%;display: flex; flex-wrap: wrap;justify-content: space-evenly;">
+                    {% for showtime in showtimes %}
+                        <li class="mt-2" style="width:100%;max-width: 350px;">
+                            <span class="badge bg-primary" style="width:100%;"><h4>{{ showtime.date }}</h4>
+                            <ul style="padding:0;list-style-type:none;display: flex;align-items: center;justify-content: center;">
+                                {% for time in showtime.times %}
+                                    <li style="margin-left:15px;">
+                                        <span class="badge bg-dark"><h5>{{ time  }}</h5></span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </span>
                         </li>
                     {% endfor %}
                 </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+            {% if self.youtube_id %}
+                <h4 class="mt-4">Trailer:</h4>
+                <div class="row mb-4">
+                    <div class="col">
+                        <div style="background-color:white;background-image:url('{{ tmp_photo.url }}');background-size:cover;">
+                            <a data-fancybox href="https://www.youtube.com/watch?v={{  self.youtube_id }}"  style="width:100%;display: flex;justify-content: center;align-items: center;height:300px;">
+                                <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             </div>
         </div>
 
     </div>
 
+{% endblock %}
+
+{% block extra_js %}
+    {% if self.youtube_id %}
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    {% endif %}
 {% endblock %}

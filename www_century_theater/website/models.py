@@ -66,6 +66,7 @@ class Movie(Page):
     open_date = models.DateField(null=True, blank=True)
     close_date = models.DateField(null=True, blank=True)
 
+
     content_panels = [
         MultiFieldPanel(
             [
@@ -87,6 +88,29 @@ class Movie(Page):
     ]
     parent_page_types = ['website.NowPlayingPage', 'website.ComingSoonPage']
     subpage_types = []
+
+    def get_context(self, value, *args, **kwargs):
+        context = super(Movie, self).get_context(value)
+        showtimes = []
+        show_dates = []
+
+        for show_date in self.showtimes.all():
+            if show_date.show_date not in show_dates:
+                show_dates.append(show_date.show_date)
+
+        print(show_dates)
+
+        for show_date in show_dates:
+            time_list = []
+            temp_dict = dict()
+            temp_dict['date'] = show_date
+            for time in ShowTime.objects.filter(show_date=show_date, page_id=self.id):
+                time_list.append(time.show_time)
+                temp_dict['times'] = time_list
+            showtimes.append(temp_dict)
+
+        context['showtimes'] = showtimes
+        return context
 
 
 class NowPlayingPage(Page):
