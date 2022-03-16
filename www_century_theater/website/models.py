@@ -138,6 +138,18 @@ class Movie(Page):
                 context['imdb_title_data'] = json.load(f)
                 # Closing file
                 f.close()
+
+            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json'):
+                print("FILE MISSING DO API CALL")
+            else:
+                # Opening JSON file
+                f = open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json')
+
+                # returns JSON object as
+                # a dictionary
+                context['reviews'] = json.load(f)
+                # Closing file
+                f.close()
         return context
 
 
