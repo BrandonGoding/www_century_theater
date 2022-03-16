@@ -2,7 +2,7 @@ import datetime
 from django.utils import timezone
 from django.db import models
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page, Orderable
@@ -65,7 +65,13 @@ class Movie(Page):
     youtube_id = models.CharField(max_length=25, null=True, blank=True)
     open_date = models.DateField(null=True, blank=True)
     close_date = models.DateField(null=True, blank=True)
-
+    review_page = models.ForeignKey(
+        'blog.BlogPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
 
     content_panels = [
         MultiFieldPanel(
@@ -84,6 +90,12 @@ class Movie(Page):
                 InlinePanel("showtimes", label="ShowTime")
             ],
             heading="Showtimes"
+        ),
+        MultiFieldPanel(
+            [
+                PageChooserPanel('review_page', 'blog.BlogPage'),
+            ],
+            heading="Review Page"
         )
     ]
     parent_page_types = ['website.NowPlayingPage', 'website.ComingSoonPage']

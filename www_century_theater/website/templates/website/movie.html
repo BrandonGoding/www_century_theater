@@ -63,11 +63,11 @@
                 <ul style="list-style-type:none;width:100%;display: flex; flex-wrap: wrap;justify-content: space-evenly;">
                     {% for showtime in showtimes %}
                         <li class="mt-2" style="width:100%;max-width: 350px;">
-                            <span class="badge bg-primary" style="width:100%;"><h4>{{ showtime.date }}</h4>
+                            <span class="badge bg-primary" style="width:100%;"><h4>{{ showtime.date|date:"l, F j, Y" }}</h4>
                             <ul style="padding:0;list-style-type:none;display: flex;align-items: center;justify-content: center;">
                                 {% for time in showtime.times %}
                                     <li style="margin-left:15px;">
-                                        <span class="badge bg-dark"><h5>{{ time  }}</h5></span>
+                                        <span class="badge bg-dark"><h5>{{ time|date:"g:i A"  }}</h5></span>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -90,7 +90,22 @@
                     </div>
                 </div>
             {% endif %}
-
+            {% if self.review_page %}
+                <h4 class="mt-4">Review:</h4>
+                <div class="row mb-4">
+                    <div class="col">
+                            <div class="card mb-4">
+                                <a href="{{ self.review_page.url }}">{% image self.review_page.featured_image fill-700x350-c100 class="card-img-top img-flud" %}</a>
+                                <div class="card-body">
+                                    <div class="small text-muted">{{ self.review_page.post_date|date:"l F d, Y"  }}</div>
+                                    <h2 class="card-title h5">{{ self.review_page.title }}</h2>
+                                    <p class="card-text">{{ self.review_page.content|striptags|safe|truncatewords:15 }}</p>
+                                    <a class="btn btn-primary" href="{{ self.review_page.url }}">Read more →</a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            {% endif %}
             </div>
         </div>
 
