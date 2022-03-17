@@ -12,7 +12,8 @@ from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock,
 from django.conf import settings as django_settings
 import os
 import json
-
+import requests
+from decouple import config
 
 class BasicPage(Page):
     body = StreamField([
@@ -128,19 +129,29 @@ class Movie(Page):
 
         if self.imdb_id:
             if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json'):
-                print("FILE MISSING DO API CALL")
+                title_dict = dict()
+                title_dict['data'] = requests.get(f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{self.imdb_id}").json()
+                title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+                with open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json', 'w') as f:
+                    json.dump(title_dict, f)
+                f.close()
+                context['imdb_title_data'] = title_dict.get('data')
             else:
                 # Opening JSON file
                 f = open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json')
-
                 # returns JSON object as
                 # a dictionary
-                context['imdb_title_data'] = json.load(f)
+                title_dict = json.load(f)
+                context['imdb_title_data'] = title_dict.get('data')
                 # Closing file
                 f.close()
 
             if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json'):
-                print("FILE MISSING DO API CALL")
+                response = requests.get(f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{self.imdb_id}").json()
+                with open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json', 'w') as f:
+                    json.dump(response, f)
+                f.close()
+                context['reviews'] = response
             else:
                 # Opening JSON file
                 f = open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json')
