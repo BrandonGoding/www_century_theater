@@ -45,7 +45,7 @@
     {% image movie.featured_image original as tmp_photo %}
     <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
     <h1>{{ movie.title }}</h1>
-    <h2>{% if imdb_title_data.tagline %}{{ imdb_title_data.tagline }} <br/>{% endif %}<small>{{ imdb_title_data.contentRating }}</small></h2>
+    <h2>{% if imdb_title_data.tagline %}{{ imdb_title_data.tagline }} <br/>{% endif %}{% if imdb_title_data.contentRating %}<small>Rated: {{ imdb_title_data.contentRating }}</small>{% endif %}</h2>
     {% if movie.links %}
         <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
             {% for link in movie.links %}

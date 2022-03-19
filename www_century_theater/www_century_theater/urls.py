@@ -20,12 +20,14 @@ from django.urls import path, include, re_path
 from wagtail.core import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
+from website.api import api_router
 
 
 urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     path('admin/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
+    path('api/v2/', api_router.urls),
     re_path(r'', include(wagtail_urls)),
 ]
 
