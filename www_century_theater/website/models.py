@@ -91,6 +91,7 @@ class Movie(ClusterableModel):
             [
                 FieldPanel('title'),
                 FieldPanel('slug'),
+                ImageChooserPanel('featured_image'),
             ],
             "Movie Title & Slug"
         ),
@@ -188,7 +189,7 @@ class Movie(ClusterableModel):
     #     return context
 
 
-class NowPlayingPage(Page):
+class NowPlayingPage(RoutablePageMixin, Page):
     body = StreamField([
         ('feature_list_section', FeaturesListBlock()),
         ('recent_post_section', RecentPostsBlock()),
@@ -211,19 +212,14 @@ class NowPlayingPage(Page):
         current_day = datetime.date.today()
         return current_day - datetime.timedelta(days=current_day.weekday()) + datetime.timedelta(days=6)
 
-    # def get_context(self, value, *args, **kwargs):
-    #     context = super(NowPlayingPage, self).get_context(value)
-    #     context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).live()[:2]
-    #     return context
-    #
+    def get_context(self, value, *args, **kwargs):
+        context = super(NowPlayingPage, self).get_context(value)
+        context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).order_by('open_date')[:2]
+        return context
+
+    # TODO:  URL FOR DETAIL VIEW
+
+    # TODO:  URL FOR UPCOMING VIEW
 
 
-class ComingSoonPage(RoutablePageMixin, Page):
-    max_count = 1
 
-    @route(r'^$')  # will override the default Page serving mechanism
-    def coming_soon_page(self, request):
-        """
-        View function for the current events page
-        """
-        return self.render(request, context_overrides={})
