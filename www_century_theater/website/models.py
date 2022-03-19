@@ -1,12 +1,17 @@
 import datetime
 from django.utils import timezone
 from django.db import models
+from django.utils.text import slugify
 from modelcluster.fields import ParentalKey
-from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from modelcluster.models import ClusterableModel
+from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, \
+    FieldRowPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.models import register_snippet
+
 from blog.models import BlogPage
 from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock, StudiosBlock
 from django.conf import settings as django_settings
@@ -14,6 +19,7 @@ import os
 import json
 import requests
 from decouple import config
+
 
 class BasicPage(Page):
     body = StreamField([
@@ -35,10 +41,10 @@ class BasicPage(Page):
         return context
 
 
-class ShowTime(Orderable):
+class ShowTime(models.Model):
     """Between 1 and 5 images for the home page carousel."""
 
-    page = ParentalKey("website.Movie", related_name="showtimes")
+    movie = ParentalKey('website.Movie', related_name='showtimes', null=True, on_delete=models.CASCADE)
     show_date = models.DateField(default=timezone.now())
     show_time = models.TimeField()
     matinee = models.BooleanField(default=False)
@@ -50,15 +56,9 @@ class ShowTime(Orderable):
     ]
 
 
-class Movie(Page):
-    RATING_CHOICES = (
-        ("G - General Audiences", "G"),
-        ("PG - Parental Guidance Suggested", "PG"),
-        ("PG-13 Parents Strongly Cautioned", "PG-13"),
-        ("NC-17 - Adults Only", "NC-17")
-    )
-
-    rating = models.CharField(max_length=35, choices=RATING_CHOICES, null=True, blank=True)
+class Movie(ClusterableModel):
+    title = models.CharField(max_length=50, null=False, blank=False, default="TITLE")
+    slug = models.SlugField(null=True, blank=True, auto_created=True)
     featured_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -66,8 +66,8 @@ class Movie(Page):
         on_delete=models.SET_NULL,
         related_name='+'
     )
-    youtube_id = models.CharField(max_length=25, null=True, blank=True)
-    imdb_id = models.CharField(max_length=25, null=True, blank=True)
+    youtube_id = models.CharField(max_length=25, null=True, blank=True, verbose_name="YouTube ID")
+    imdb_id = models.CharField(max_length=25, null=True, blank=True, verbose_name="IMDB ID")
     open_date = models.DateField(null=True, blank=True)
     close_date = models.DateField(null=True, blank=True)
     review_page = models.ForeignKey(
@@ -78,90 +78,114 @@ class Movie(Page):
         related_name='+',
     )
 
-    content_panels = [
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        value = self.title
+        self.slug = slugify(value, allow_unicode=True)
+        super().save(*args, **kwargs)
+
+    panels = [
         MultiFieldPanel(
             [
                 FieldPanel('title'),
-                FieldPanel('rating'),
-                ImageChooserPanel('featured_image'),
-                FieldPanel('youtube_id'),
-                FieldPanel('imdb_id'),
-                FieldPanel('open_date'),
-                FieldPanel('close_date'),
+                FieldPanel('slug'),
             ],
-            heading="Movie Header Info"
+            "Movie Title & Slug"
         ),
         MultiFieldPanel(
             [
-                InlinePanel("showtimes", label="ShowTime")
+                FieldRowPanel(
+                    [
+                        FieldPanel('youtube_id'),
+                        FieldPanel('imdb_id'),
+                    ]
+                ),
             ],
-            heading="Showtimes"
+            "External Resources"
         ),
         MultiFieldPanel(
             [
-                PageChooserPanel('review_page', 'blog.BlogPage'),
+                FieldRowPanel(
+                    [
+                        FieldPanel('open_date'),
+                        FieldPanel('close_date'),
+                    ]
+                ),
             ],
-            heading="Review Page"
+            "Movie Run"
+        ),
+        MultiFieldPanel(
+            [
+                InlinePanel('showtimes')
+            ],
+            "Showtimes"
+        ),
+        MultiFieldPanel(
+            [
+                PageChooserPanel("review_page")
+            ],
+            "Rick's Review"
         )
     ]
-    parent_page_types = ['website.NowPlayingPage', 'website.ComingSoonPage']
-    subpage_types = []
 
-    def get_context(self, value, *args, **kwargs):
-        context = super(Movie, self).get_context(value)
-        showtimes = []
-        show_dates = []
 
-        for show_date in self.showtimes.all():
-            if show_date.show_date not in show_dates:
-                show_dates.append(show_date.show_date)
-
-        for show_date in show_dates:
-            time_list = []
-            temp_dict = dict()
-            temp_dict['date'] = show_date
-            for time in ShowTime.objects.filter(show_date=show_date, page_id=self.id):
-                time_list.append(time.show_time)
-                temp_dict['times'] = time_list
-            showtimes.append(temp_dict)
-
-        context['showtimes'] = showtimes
-
-        if self.imdb_id:
-            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json'):
-                title_dict = dict()
-                title_dict['data'] = requests.get(f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{self.imdb_id}").json()
-                title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-                with open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json', 'w') as f:
-                    json.dump(title_dict, f)
-                f.close()
-                context['imdb_title_data'] = title_dict.get('data')
-            else:
-                # Opening JSON file
-                f = open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json')
-                # returns JSON object as
-                # a dictionary
-                title_dict = json.load(f)
-                context['imdb_title_data'] = title_dict.get('data')
-                # Closing file
-                f.close()
-
-            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json'):
-                response = requests.get(f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{self.imdb_id}").json()
-                with open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json', 'w') as f:
-                    json.dump(response, f)
-                f.close()
-                context['reviews'] = response
-            else:
-                # Opening JSON file
-                f = open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json')
-
-                # returns JSON object as
-                # a dictionary
-                context['reviews'] = json.load(f)
-                # Closing file
-                f.close()
-        return context
+    # def get_context(self, value, *args, **kwargs):
+    #     context = super(Movie, self).get_context(value)
+    #     showtimes = []
+    #     show_dates = []
+    #
+    #     for show_date in self.showtimes.all():
+    #         if show_date.show_date not in show_dates:
+    #             show_dates.append(show_date.show_date)
+    #
+    #     for show_date in show_dates:
+    #         time_list = []
+    #         temp_dict = dict()
+    #         temp_dict['date'] = show_date
+    #         for time in ShowTime.objects.filter(show_date=show_date, page_id=self.id):
+    #             time_list.append(time.show_time)
+    #             temp_dict['times'] = time_list
+    #         showtimes.append(temp_dict)
+    #
+    #     context['showtimes'] = showtimes
+    #
+    #     if self.imdb_id:
+    #         if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json'):
+    #             title_dict = dict()
+    #             title_dict['data'] = requests.get(f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{self.imdb_id}").json()
+    #             title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+    #             with open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json', 'w') as f:
+    #                 json.dump(title_dict, f)
+    #             f.close()
+    #             context['imdb_title_data'] = title_dict.get('data')
+    #         else:
+    #             # Opening JSON file
+    #             f = open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json')
+    #             # returns JSON object as
+    #             # a dictionary
+    #             title_dict = json.load(f)
+    #             context['imdb_title_data'] = title_dict.get('data')
+    #             # Closing file
+    #             f.close()
+    #
+    #         if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json'):
+    #             response = requests.get(f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{self.imdb_id}").json()
+    #             with open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json', 'w') as f:
+    #                 json.dump(response, f)
+    #             f.close()
+    #             context['reviews'] = response
+    #         else:
+    #             # Opening JSON file
+    #             f = open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json')
+    #
+    #             # returns JSON object as
+    #             # a dictionary
+    #             context['reviews'] = json.load(f)
+    #             # Closing file
+    #             f.close()
+    #     return context
 
 
 class NowPlayingPage(Page):
@@ -177,8 +201,6 @@ class NowPlayingPage(Page):
 
     max_count = 1
 
-    subpage_types = ['website.Movie']
-
     @property
     def first_day_of_week(self):
         current_day = datetime.date.today()
@@ -189,16 +211,15 @@ class NowPlayingPage(Page):
         current_day = datetime.date.today()
         return current_day - datetime.timedelta(days=current_day.weekday()) + datetime.timedelta(days=6)
 
-    def get_context(self, value, *args, **kwargs):
-        context = super(NowPlayingPage, self).get_context(value)
-        context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).live()[:2]
-        return context
+    # def get_context(self, value, *args, **kwargs):
+    #     context = super(NowPlayingPage, self).get_context(value)
+    #     context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).live()[:2]
+    #     return context
+    #
 
 
 class ComingSoonPage(RoutablePageMixin, Page):
     max_count = 1
-
-    subpage_types = ['website.Movie']
 
     @route(r'^$')  # will override the default Page serving mechanism
     def coming_soon_page(self, request):
