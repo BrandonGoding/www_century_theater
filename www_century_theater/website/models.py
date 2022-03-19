@@ -8,6 +8,7 @@ from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, \
     FieldRowPanel
+from wagtail.api import APIField
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page, Orderable
@@ -133,6 +134,10 @@ class Movie(ClusterableModel):
         )
     ]
 
+    api_fields = [
+        APIField('youtube_id'),
+        APIField('imdb_id')
+    ]
 
 
 class NowPlayingPage(RoutablePageMixin, Page):
