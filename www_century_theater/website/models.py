@@ -1,4 +1,6 @@
 import datetime
+
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.db import models
 from django.utils.text import slugify
@@ -132,62 +134,6 @@ class Movie(ClusterableModel):
     ]
 
 
-    # def get_context(self, value, *args, **kwargs):
-    #     context = super(Movie, self).get_context(value)
-    #     showtimes = []
-    #     show_dates = []
-    #
-    #     for show_date in self.showtimes.all():
-    #         if show_date.show_date not in show_dates:
-    #             show_dates.append(show_date.show_date)
-    #
-    #     for show_date in show_dates:
-    #         time_list = []
-    #         temp_dict = dict()
-    #         temp_dict['date'] = show_date
-    #         for time in ShowTime.objects.filter(show_date=show_date, page_id=self.id):
-    #             time_list.append(time.show_time)
-    #             temp_dict['times'] = time_list
-    #         showtimes.append(temp_dict)
-    #
-    #     context['showtimes'] = showtimes
-    #
-    #     if self.imdb_id:
-    #         if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json'):
-    #             title_dict = dict()
-    #             title_dict['data'] = requests.get(f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{self.imdb_id}").json()
-    #             title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-    #             with open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json', 'w') as f:
-    #                 json.dump(title_dict, f)
-    #             f.close()
-    #             context['imdb_title_data'] = title_dict.get('data')
-    #         else:
-    #             # Opening JSON file
-    #             f = open(f'{django_settings.BASE_DIR}/cache/title_{self.imdb_id}.json')
-    #             # returns JSON object as
-    #             # a dictionary
-    #             title_dict = json.load(f)
-    #             context['imdb_title_data'] = title_dict.get('data')
-    #             # Closing file
-    #             f.close()
-    #
-    #         if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json'):
-    #             response = requests.get(f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{self.imdb_id}").json()
-    #             with open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json', 'w') as f:
-    #                 json.dump(response, f)
-    #             f.close()
-    #             context['reviews'] = response
-    #         else:
-    #             # Opening JSON file
-    #             f = open(f'{django_settings.BASE_DIR}/cache/reviews_{self.imdb_id}.json')
-    #
-    #             # returns JSON object as
-    #             # a dictionary
-    #             context['reviews'] = json.load(f)
-    #             # Closing file
-    #             f.close()
-    #     return context
-
 
 class NowPlayingPage(RoutablePageMixin, Page):
     body = StreamField([
@@ -218,6 +164,67 @@ class NowPlayingPage(RoutablePageMixin, Page):
         return context
 
     # TODO:  URL FOR DETAIL VIEW
+    @route(r"^(?P<slug>[-\w]*)/detail/$")
+    def movie_detail_page(self, request, slug, *args, **kwargs):
+        context = self.get_context(request, *args, **kwargs)
+        movie = get_object_or_404(Movie, slug=slug)
+        context['movie'] = movie
+        showtimes = []
+        show_dates = []
+
+        for show_date in movie.showtimes.all():
+            if show_date.show_date not in show_dates:
+                show_dates.append(show_date.show_date)
+
+        for show_date in show_dates:
+            time_list = []
+            temp_dict = dict()
+            temp_dict['date'] = show_date
+            for time in ShowTime.objects.filter(show_date=show_date, movie_id=movie.id):
+                time_list.append(time.show_time)
+                temp_dict['times'] = time_list
+            showtimes.append(temp_dict)
+
+        context['showtimes'] = showtimes
+
+        if movie.imdb_id:
+            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json'):
+                title_dict = dict()
+                title_dict['data'] = requests.get(
+                    f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{movie.imdb_id}").json()
+                title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+                with open(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json', 'w') as f:
+                    json.dump(title_dict, f)
+                f.close()
+                context['imdb_title_data'] = title_dict.get('data')
+            else:
+                # Opening JSON file
+                f = open(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json')
+                # returns JSON object as
+                # a dictionary
+                title_dict = json.load(f)
+                context['imdb_title_data'] = title_dict.get('data')
+                # Closing file
+                f.close()
+
+            if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json'):
+                response = requests.get(
+                    f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{movie.imdb_id}").json()
+                with open(f'{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json', 'w') as f:
+                    json.dump(response, f)
+                f.close()
+                context['reviews'] = response
+            else:
+                # Opening JSON file
+                f = open(f'{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json')
+
+                # returns JSON object as
+                # a dictionary
+                context['reviews'] = json.load(f)
+                # Closing file
+                f.close()
+        
+        return render(request, "website/movie.html", context)
 
     # TODO:  URL FOR UPCOMING VIEW
 

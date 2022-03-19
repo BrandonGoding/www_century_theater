@@ -33,7 +33,7 @@
     }
 
     </style>
-{% if self.youtube_id %}
+{% if movie.youtube_id %}
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"
@@ -42,13 +42,13 @@
 {% endblock %}
 
 {% block content %}
-    {% image self.featured_image original as tmp_photo %}
+    {% image movie.featured_image original as tmp_photo %}
     <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
-    <h1>{{ self.title }}</h1>
+    <h1>{{ movie.title }}</h1>
     <h2>{% if imdb_title_data.tagline %}{{ imdb_title_data.tagline }} <br/>{% endif %}<small>{{ imdb_title_data.contentRating }}</small></h2>
-    {% if self.links %}
+    {% if movie.links %}
         <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
-            {% for link in self.links %}
+            {% for link in movie.links %}
             <a href="{{ link.link_page.url }}" class="btn btn-large {% if forloop.first %}btn-primary{% else %}btn-outline-light{% endif %}" >{{ link.link_text }}</a>
             {% endfor %}
         </div>
@@ -167,26 +167,26 @@
                     </div>
                 </div>
             {% endif %}
-            {% if self.youtube_id %}
+            {% if movie.youtube_id %}
                 <div class="row mb-4">
                     <div class="col">
                         <div style="background-color:white;background-image:url('{{ tmp_photo.url }}');background-size:cover;">
-                            <a data-fancybox href="https://www.youtube.com/watch?v={{  self.youtube_id }}"  style="width:100%;display: flex;justify-content: center;align-items: center;height:300px;">
+                            <a data-fancybox href="https://www.youtube.com/watch?v={{  movie.youtube_id }}"  style="width:100%;display: flex;justify-content: center;align-items: center;height:300px;">
                                 <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             {% endif %}
-            {% if self.review_page %}
+            {% if movie.review_page %}
                 <div class="row mb-4">
                     <div class="col">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="small text-muted">{{ self.review_page.post_date|date:"l F d, Y"  }}</div>
-                                    <h2 class="card-title h5">{{ self.review_page.title }}</h2>
-                                    <p class="card-text">{{ self.review_page.content|striptags|safe|truncatewords:15 }}</p>
-                                    <a class="btn btn-primary" href="{{ self.review_page.url }}">Read more →</a>
+                                    <div class="small text-muted">{{ movie.review_page.post_date|date:"l F d, Y"  }}</div>
+                                    <h2 class="card-title h5">{{ movie.review_page.title }}</h2>
+                                    <p class="card-text">{{ movie.review_page.content|striptags|safe|truncatewords:15 }}</p>
+                                    <a class="btn btn-primary" href="{{ movie.review_page.url }}">Read more →</a>
                                 </div>
                             </div>
                     </div>
@@ -200,7 +200,7 @@
 {% endblock %}
 
 {% block extra_js %}
-    {% if self.youtube_id %}
+    {% if movie.youtube_id %}
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
     {% endif %}
 {% endblock %}
