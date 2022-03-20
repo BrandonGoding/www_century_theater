@@ -48,7 +48,7 @@ class ShowTime(models.Model):
     """Between 1 and 5 images for the home page carousel."""
 
     movie = ParentalKey('website.Movie', related_name='showtimes', null=True, on_delete=models.CASCADE)
-    show_date = models.DateField(default=timezone.now())
+    show_date = models.DateField(default=None)
     show_time = models.TimeField()
     matinee = models.BooleanField(default=False)
 
@@ -73,6 +73,7 @@ class Movie(ClusterableModel):
     imdb_id = models.CharField(max_length=25, null=True, blank=True, verbose_name="IMDB ID")
     open_date = models.DateField(null=True, blank=True)
     close_date = models.DateField(null=True, blank=True)
+    confirmed = models.BooleanField(default=False)
     review_page = models.ForeignKey(
         'blog.BlogPage',
         null=True,
@@ -83,6 +84,10 @@ class Movie(ClusterableModel):
 
     def __str__(self):
         return self.title
+
+    @property
+    def last_day_for_calender(self):
+        return self.close_date + datetime.timedelta(days=1)
 
     def save(self, *args, **kwargs):
         value = self.title
@@ -95,6 +100,7 @@ class Movie(ClusterableModel):
                 FieldPanel('title'),
                 FieldPanel('slug'),
                 ImageChooserPanel('featured_image'),
+                FieldPanel('confirmed')
             ],
             "Movie Title & Slug"
         ),
@@ -168,7 +174,6 @@ class NowPlayingPage(RoutablePageMixin, Page):
         context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).order_by('open_date')[:2]
         return context
 
-    # TODO:  URL FOR DETAIL VIEW
     @route(r"^(?P<slug>[-\w]*)/detail/$")
     def movie_detail_page(self, request, slug, *args, **kwargs):
         context = self.get_context(request, *args, **kwargs)
@@ -231,7 +236,12 @@ class NowPlayingPage(RoutablePageMixin, Page):
         
         return render(request, "website/movie.html", context)
 
-    # TODO:  URL FOR UPCOMING VIEW
+    @route(r"upcoming/$")
+    def upcoming_movies_page(self, request, *args, **kwargs):
+        context = self.get_context(request, *args, **kwargs)
+        context['movies'] = Movie.objects.filter(open_date__gt=datetime.datetime.now() - datetime.timedelta(days=31))
+        return render(request, "website/upcoming_movies.html", context)
+
 
 
 

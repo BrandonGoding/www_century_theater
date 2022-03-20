@@ -1,13 +1,37 @@
 {% extends 'website/base.html' %}
-{% load wagtailimages_tags %}
+{% load wagtailimages_tags static %}
+
+{% block extra_css %}
+
+    <style type="text/css">
+        .page_head{
+            /* Set a specific height */
+            min-height: 500px;
+            /* Create the parallax scrolling effect */
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: rgba(0, 0, 0, 0.75);
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            background-image: url('{% static 'assets/img/background-img.png' %}');
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 
     <!-- Page header with logo and tagline-->
-        <header class="py-5 bg-light border-bottom mb-4">
+        <header class="page_head py-5  border-bottom mb-4">
             <div class="container">
                 <div class="text-center my-5">
-                    <h1 class="fw-bolder">The Century Theater Blog</h1>
-                    <p class="lead mb-0">Your place for Century Theater News, Movie Reviews, and More!</p>
+                    <h1 class="fw-bolder text-white">The Century Theater Blog</h1>
+                    <p class="lead mb-0 text-white">Your place for Century Theater News, Movie Reviews, and More!</p>
                 </div>
             </div>
         </header>
