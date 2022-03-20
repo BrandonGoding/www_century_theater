@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'wagtail.contrib.redirects',
     'wagtail.contrib.routable_page',
     'wagtail.contrib.modeladmin',
-    'wagtail.api.v2',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [

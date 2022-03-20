@@ -13,6 +13,16 @@
     {% endblock %}
 
     <title>{{ self.title }}</title>
+
+    <link rel="stylesheet" href="https://use.typekit.net/pil0fea.css">
+    <style type="text/css">
+        h1, h2, h3, h4, h5, h6{
+            font-family: adobe-garamond-pro, serif;
+        }
+        p{
+            font-family: gill-sans-nova, sans-serif;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,9 +34,6 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-{#        <li class="nav-item">#}
-{#          <a class="nav-link active" aria-current="page" href="#">Home</a>#}
-{#        </li>#}
         <li class="nav-item">
           <a class="nav-link" href="/the-century-theater-blog/">Blog</a>
         </li>
@@ -37,10 +44,6 @@
           <a class="nav-link" href="/now-playing-at-the-century-theater/">Now Playing</a>
         </li>
       </ul>
-{#      <form class="d-flex">#}
-{#        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
-{#        <button class="btn btn-outline-success" type="submit">Search</button>#}
-{#      </form>#}
     </div>
   </div>
 </nav>
