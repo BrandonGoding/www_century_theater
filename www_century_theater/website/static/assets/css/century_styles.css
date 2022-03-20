@@ -11444,3 +11444,36 @@ textarea.form-control-lg {
   width: 4rem;
   font-size: 2rem;
 }
+
+h1, h2, h3, h4, h5, h6{
+            font-family: adobe-garamond-pro, serif;
+        }
+        p{
+            font-family: gill-sans-nova, sans-serif;
+        }
+
+        .parallax {
+        /* Set a specific height */
+        min-height: 500px;
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-color: rgba(0, 0, 0,  0.75);
+        background-blend-mode: overlay;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .parallax > h1 {
+        color:white;
+        max-width: 800px;
+        text-align:center;
+    }
+    .parallax > h2 {
+        color: white;
+        max-width: 800px;
+        text-align:center;
+    }
