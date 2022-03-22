@@ -1,0 +1,312 @@
+{
+  "data": {
+    "id": "tt0441773",
+    "title": "Kung Fu Panda",
+    "originalTitle": "",
+    "fullTitle": "Kung Fu Panda (2008)",
+    "type": "Movie",
+    "year": "2008",
+    "image": "https://imdb-api.com/images/original/MV5BODJkZTZhMWItMDI3Yy00ZWZlLTk4NjQtOTI1ZjU5NjBjZTVjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_Ratio0.6751_AL_.jpg",
+    "releaseDate": "2008-06-06",
+    "runtimeMins": "92",
+    "runtimeStr": "1h 32min",
+    "plot": "It's the story about a lazy, irreverent slacker panda, named Po, who is the biggest fan of Kung Fu around...which doesn't exactly come in handy while working every day in his family's noodle shop. Unexpectedly chosen to fulfill an ancient prophecy, Po's dreams become reality when he joins the world of Kung Fu and studies alongside his idols, the legendary Furious Five -- Tigress, Crane, Mantis, Viper and Monkey -- under the leadership of their guru, Master Shifu. But before they know it, the vengeful and treacherous snow leopard Tai Lung is headed their way, and it's up to Po to defend everyone from the oncoming threat. Can he turn his dreams of becoming a Kung Fu master into reality? Po puts his heart - and his girth - into the task, and the unlikely hero ultimately finds that his greatest weaknesses turn out to be his greatest strengths.",
+    "plotLocal": "",
+    "plotLocalIsRtl": false,
+    "awards": "Nominated for 1 Oscar, 14 wins & 39 nominations total",
+    "directors": "Mark Osborne, John Stevenson",
+    "directorList": [
+      {
+        "id": "nm0651706",
+        "name": "Mark Osborne"
+      },
+      {
+        "id": "nm0828970",
+        "name": "John Stevenson"
+      }
+    ],
+    "writers": "Jonathan Aibel, Glenn Berger, Ethan Reiff",
+    "writerList": [
+      {
+        "id": "nm0008743",
+        "name": "Jonathan Aibel"
+      },
+      {
+        "id": "nm0074184",
+        "name": "Glenn Berger"
+      },
+      {
+        "id": "nm0717550",
+        "name": "Ethan Reiff"
+      }
+    ],
+    "stars": "Jack Black, Ian McShane, Angelina Jolie",
+    "starList": [
+      {
+        "id": "nm0085312",
+        "name": "Jack Black"
+      },
+      {
+        "id": "nm0574534",
+        "name": "Ian McShane"
+      },
+      {
+        "id": "nm0001401",
+        "name": "Angelina Jolie"
+      }
+    ],
+    "actorList": [
+      {
+        "id": "nm0085312",
+        "image": "https://imdb-api.com/images/original/MV5BYTFiMWNlNmItMDRiYy00NzA4LWE5YjItZmViNWQ2NzhhOWZlXkEyXkFqcGdeQXVyMTA2Mjc5ODMy._V1_Ratio1.0000_AL_.jpg",
+        "name": "Jack Black",
+        "asCharacter": "Poas Po"
+      },
+      {
+        "id": "nm0574534",
+        "image": "https://imdb-api.com/images/original/MV5BMjg5NDg3OTQtYzMyYS00YjhhLTk2NmEtZTExNGViYTczZTU2XkEyXkFqcGdeQXVyMTU1MTU2MDI@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Ian McShane",
+        "asCharacter": "Tai Lungas Tai Lung"
+      },
+      {
+        "id": "nm0001401",
+        "image": "https://imdb-api.com/images/original/MV5BODg3MzYwMjE4N15BMl5BanBnXkFtZTcwMjU5NzAzNw@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Angelina Jolie",
+        "asCharacter": "Tigressas Tigress"
+      },
+      {
+        "id": "nm0000163",
+        "image": "https://imdb-api.com/images/original/MV5BMTc3NzU0ODczMF5BMl5BanBnXkFtZTcwODEyMDY5Mg@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Dustin Hoffman",
+        "asCharacter": "Shifuas Shifu"
+      },
+      {
+        "id": "nm0000329",
+        "image": "https://imdb-api.com/images/original/MV5BMTk4MDM0MDUzM15BMl5BanBnXkFtZTcwOTI4MzU1Mw@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Jackie Chan",
+        "asCharacter": "Monkeyas Monkey"
+      },
+      {
+        "id": "nm0736622",
+        "image": "https://imdb-api.com/images/original/MV5BMTQ0NjgzNzcwNV5BMl5BanBnXkFtZTcwODExMDYxOQ@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Seth Rogen",
+        "asCharacter": "Mantisas Mantis"
+      },
+      {
+        "id": "nm0005154",
+        "image": "https://imdb-api.com/images/original/MV5BOTgxODE0MjI5Ml5BMl5BanBnXkFtZTcwMjkxMzMzMg@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Lucy Liu",
+        "asCharacter": "Viperas Viper"
+      },
+      {
+        "id": "nm0189144",
+        "image": "https://imdb-api.com/images/original/MV5BMTMzMzgwOTI1N15BMl5BanBnXkFtZTcwNTg5ODk2Mw@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "David Cross",
+        "asCharacter": "Craneas Crane"
+      },
+      {
+        "id": "nm0453641",
+        "image": "https://imdb-api.com/images/original/MV5BMTIwMjY3ODY5M15BMl5BanBnXkFyZXN1bWU@._V1_Ratio1.2429_AL_.jpg",
+        "name": "Randall Duk Kim",
+        "asCharacter": "Oogwayas Oogway"
+      },
+      {
+        "id": "nm0393222",
+        "image": "https://imdb-api.com/images/original/MV5BMjM0MTQxOTA4MF5BMl5BanBnXkFtZTgwODE1OTcyMjE@._V1_Ratio1.5000_AL_.jpg",
+        "name": "James Hong",
+        "asCharacter": "Mr. Pingas Mr. Ping"
+      },
+      {
+        "id": "nm0283945",
+        "image": "https://imdb-api.com/images/original/MV5BODcyOWZlNzEtZmRkMy00NTljLTg0NDctNmI4ZTJlMmVkOTZlXkEyXkFqcGdeQXVyMTE4NTMxNjI@._V1_Ratio1.0857_AL_.jpg",
+        "name": "Dan Fogler",
+        "asCharacter": "Zengas Zeng"
+      },
+      {
+        "id": "nm0003817",
+        "image": "https://imdb-api.com/images/original/MV5BMTI3NDY2ODk5OV5BMl5BanBnXkFtZTYwMjQ0NzE0._V1_Ratio1.0000_AL_.jpg",
+        "name": "Michael Clarke Duncan",
+        "asCharacter": "Commander Vachiras Commander Vachir"
+      },
+      {
+        "id": "nm0001431",
+        "image": "https://imdb-api.com/images/original/MV5BZjM1N2MwY2ItMzRmMi00Nzc4LWEzOGEtZTdlZWI4OGQxYjdiXkEyXkFqcGdeQXVyNTUwNzA4Mw@@._V1_Ratio1.3286_AL_.jpg",
+        "name": "Wayne Knight",
+        "asCharacter": "Gang Bossas Gang Boss"
+      },
+      {
+        "id": "nm0309307",
+        "image": "https://imdb-api.com/images/original/MV5BNDMxMjk5OTQ2Nl5BMl5BanBnXkFtZTYwODU3NTA2._V1_Ratio1.0000_AL_.jpg",
+        "name": "Kyle Gass",
+        "asCharacter": "KG Shawas KG Shaw"
+      },
+      {
+        "id": "nm0715469",
+        "image": "https://imdb-api.com/images/original/MV5BYjAzNGEzMzMtM2IyMi00NTk4LWE0YmQtZDE4NTVjNzg3ZmNkXkEyXkFqcGdeQXVyMjQwMDg0Ng@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "JR Reed",
+        "asCharacter": "JR Shawas JR Shaw"
+      },
+      {
+        "id": "nm0452716",
+        "image": "https://imdb-api.com/images/original/MV5BMjI4MzE4Mjg4OV5BMl5BanBnXkFtZTgwNjkzMTg3MjE@._V1_Ratio1.3429_AL_.jpg",
+        "name": "Laura Kightlinger",
+        "asCharacter": "Awed Ninjaas Awed Ninja"
+      },
+      {
+        "id": "nm1202837",
+        "image": "https://imdb-api.com/images/original/MV5BMTQ4NDcyMDU0OV5BMl5BanBnXkFtZTcwODAyMDYwOA@@._V1_Ratio1.0000_AL_.jpg",
+        "name": "Tanya Haden",
+        "asCharacter": "Smitten Bunnyas Smitten Bunny"
+      },
+      {
+        "id": "nm0443911",
+        "image": "https://imdb-api.com/images/original/MV5BYjQ2MzllN2UtOTNhZS00NTA5LTlhYjUtZGUyZmUzMzM1YTgyXkEyXkFqcGdeQXVyMTk4MjM0NTA@._V1_Ratio1.5000_AL_.jpg",
+        "name": "Stephen Kearin",
+        "asCharacter": "Gong Pigas Gong Pig"
+      }
+    ],
+    "fullCast": null,
+    "genres": "Animation, Action, Adventure",
+    "genreList": [
+      {
+        "key": "Animation",
+        "value": "Animation"
+      },
+      {
+        "key": "Action",
+        "value": "Action"
+      },
+      {
+        "key": "Adventure",
+        "value": "Adventure"
+      }
+    ],
+    "companies": "DreamWorks Animation, Dragon Warrior Media",
+    "companyList": [
+      {
+        "id": "co0129164",
+        "name": "DreamWorks Animation"
+      },
+      {
+        "id": "co0740156",
+        "name": "Dragon Warrior Media"
+      }
+    ],
+    "countries": "USA",
+    "countryList": [
+      {
+        "key": "USA",
+        "value": "USA"
+      }
+    ],
+    "languages": "English",
+    "languageList": [
+      {
+        "key": "English",
+        "value": "English"
+      }
+    ],
+    "contentRating": "PG",
+    "imDbRating": "7.6",
+    "imDbRatingVotes": "451473",
+    "metacriticRating": "74",
+    "ratings": null,
+    "wikipedia": null,
+    "posters": null,
+    "images": null,
+    "trailer": null,
+    "boxOffice": {
+      "budget": "$130,000,000 (estimated)",
+      "openingWeekendUSA": "$60,239,130",
+      "grossUSA": "$215,771,591",
+      "cumulativeWorldwideGross": "$632,083,197"
+    },
+    "tagline": "Prepare for awesomeness.",
+    "keywords": "anthropomorphic animal,kung fu,china,martial arts,giant panda",
+    "keywordList": [
+      "anthropomorphic animal",
+      "kung fu",
+      "china",
+      "martial arts",
+      "giant panda"
+    ],
+    "similars": [
+      {
+        "id": "tt1302011",
+        "title": "Kung Fu Panda 2",
+        "image": "https://imdb-api.com/images/original/MV5BYzQ0ZWIxZjAtYWI3Yy00MGM0LWFjOGYtNzcyYThiOTA3ODI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.2"
+      },
+      {
+        "id": "tt2267968",
+        "title": "Kung Fu Panda 3",
+        "image": "https://imdb-api.com/images/original/MV5BMTUyNzgxNjg2M15BMl5BanBnXkFtZTgwMTY1NDI1NjE@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.1"
+      },
+      {
+        "id": "tt0351283",
+        "title": "Madagascar",
+        "image": "https://imdb-api.com/images/original/MV5BN2I5YzFlYWEtZjRhNy00ZmQzLWJhNTktZGIwYjFjODdmNDgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "6.9"
+      },
+      {
+        "id": "tt0268380",
+        "title": "Ice Age",
+        "image": "https://imdb-api.com/images/original/MV5BOGEwMTQyMDktMWUwZC00MzExLTg1MGMtYWJiNWNhMzIyMGU5XkEyXkFqcGdeQXVyOTYyMTY2NzQ@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.5"
+      },
+      {
+        "id": "tt1323594",
+        "title": "Despicable Me",
+        "image": "https://imdb-api.com/images/original/MV5BMTY3NjY0MTQ0Nl5BMl5BanBnXkFtZTcwMzQ2MTc0Mw@@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.6"
+      },
+      {
+        "id": "tt0317219",
+        "title": "Cars",
+        "image": "https://imdb-api.com/images/original/MV5BMTg5NzY0MzA2MV5BMl5BanBnXkFtZTYwNDc3NTc2._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.2"
+      },
+      {
+        "id": "tt0479952",
+        "title": "Madagascar: Escape 2 Africa",
+        "image": "https://imdb-api.com/images/original/MV5BNTE2YzljYzAtMzRlMi00ZmY1LThiMTMtZGQ3OTI3MTNmOWI2XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "6.7"
+      },
+      {
+        "id": "tt0126029",
+        "title": "Shrek",
+        "image": "https://imdb-api.com/images/original/MV5BOGZhM2FhNTItODAzNi00YjA0LWEyN2UtNjJlYWQzYzU1MDg5L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.9"
+      },
+      {
+        "id": "tt0120363",
+        "title": "Toy Story 2",
+        "image": "https://imdb-api.com/images/original/MV5BMWM5ZDcxMTYtNTEyNS00MDRkLWI3YTItNThmMGExMWY4NDIwXkEyXkFqcGdeQXVyNjUwNzk3NDc@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.9"
+      },
+      {
+        "id": "tt1772341",
+        "title": "Wreck-It Ralph",
+        "image": "https://imdb-api.com/images/original/MV5BNzMxNTExOTkyMF5BMl5BanBnXkFtZTcwMzEyNDc0OA@@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.7"
+      },
+      {
+        "id": "tt1453405",
+        "title": "Monsters University",
+        "image": "https://imdb-api.com/images/original/MV5BMTUyODgwMDU3M15BMl5BanBnXkFtZTcwOTM4MjcxOQ@@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.3"
+      },
+      {
+        "id": "tt1690953",
+        "title": "Despicable Me 2",
+        "image": "https://imdb-api.com/images/original/MV5BMjExNjAyNTcyMF5BMl5BanBnXkFtZTgwODQzMjQ3MDE@._V1_Ratio0.6763_AL_.jpg",
+        "imDbRating": "7.3"
+      }
+    ],
+    "tvSeriesInfo": null,
+    "tvEpisodeInfo": null,
+    "errorMessage": null
+  },
+  "timestamp": "2022-03-16 22:25:19.896619"
+}
