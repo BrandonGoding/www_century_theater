@@ -11,37 +11,58 @@
             href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"
     />
 
+    <style>
+    .embed-youtube {
+    position: relative;
+    padding-bottom: 56.25%; /* - 16:9 aspect ratio (most common) */
+    /* padding-bottom: 62.5%; - 16:10 aspect ratio */
+    /* padding-bottom: 75%; - 4:3 aspect ratio */
+    padding-top: 30px;
+    height: 0;
+    overflow: visible;
+}
+
+.embed-youtube iframe,
+.embed-youtube object,
+.embed-youtube embed {
+    border: 0;
+    position: absolute;
+    top: 75px;
+    right: 10%;
+    width: 40%;
+    height: 40%;
+    min-width: 280px;
+    min-height: 163px;
+    overflow: visible;
+}
+    </style>
+
 {% endblock %}
 
 
 {% block content %}
     <div class="parallax" style="background-image: url('{% static 'assets/img/background-img.png' %}');">
         <div class="col-md-12 d-flex mt-5 justify-content-center flex-column">
-            <h1 class="text-center text-white">Now Playing</h1>
+            <h1 class="text-center text-white">Now Playing at The Century Theater</h1>
             <h2 class="text-center text-white">{{ self.first_day_of_week }} - {{ self.last_day_of_week }}</h2>
         </div>
-        <div class="d-flex flex-row mb-5 flex-wrap justify-content-center">
-            {% for movie in now_playing %}
-            <div class="d-flex flex-column mt-5" style="min-width:280px;">
-                    {% image movie.featured_image original as tmp_photo %}
-                    <img src="{{ tmp_photo.url }}" class="img-fluid" style="margin:auto;max-height:400px;max-width:80%;"/>
-                <div style="width:100%;max-width: 800px;display: flex;flex-direction: column; justify-content: space-evenly;color:#ffffff;">
-                    <h3 class="text-center">{{ movie.title }}</h3>
-                    <div class="d-flex justify-content-center">
-                        <a data-fancybox="video-gallery-{{ movie.slug }}"
-                           href="https://www.youtube.com/watch?v={{ movie.youtube_id }}"
-                           class="btn btn-primary btn-sm m-3">View the Trailer</a>
-                        <a href="{% routablepageurl page 'movie_detail_page' movie.slug %}"
-                           class="btn btn-outline-light btn-sm m-3">More Info</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
     </div>
-    {% for block in page.body %}
+    {% for movie in now_playing %}
+        {% image movie.featured_image original as tmp_photo %}
+        <div class="mt-5 mb-5" style="position:relative;height:600px;">
+            <div style="position:absolute;top:0;left:0;height:600px;max-width:1600px;width:100%;background-color:rgba(0, 0, 0, .75);background-image:url('{{ tmp_photo.url }}');background-blend-mode:overlay;background-size:cover;border-bottom:solid thick black;overflow: visible;"></div>
+                <div class="embed-youtube">
+                    <iframe src="//www.youtube.com/embed/{{ movie.youtube_id }}" width="750" height="563"></iframe>
+                </div>
+        </div>
+        {% endfor %}
+
+
+
+   {% for block in page.body %}
         {% include_block block %}
     {% endfor %}
+
 {% endblock %}
 
 {% block extra_js %}
