@@ -12,29 +12,7 @@
     />
 
     <style>
-    .embed-youtube {
-    position: relative;
-    padding-bottom: 56.25%; /* - 16:9 aspect ratio (most common) */
-    /* padding-bottom: 62.5%; - 16:10 aspect ratio */
-    /* padding-bottom: 75%; - 4:3 aspect ratio */
-    padding-top: 30px;
-    height: 0;
-    overflow: visible;
-}
 
-.embed-youtube iframe,
-.embed-youtube object,
-.embed-youtube embed {
-    border: 0;
-    position: absolute;
-    top: 75px;
-    right: 10%;
-    width: 40%;
-    height: 40%;
-    min-width: 280px;
-    min-height: 163px;
-    overflow: visible;
-}
     </style>
 
 {% endblock %}
@@ -49,11 +27,20 @@
     </div>
     {% for movie in now_playing %}
         {% image movie.featured_image original as tmp_photo %}
-        <div class="mt-5 mb-5" style="position:relative;height:600px;">
-            <div style="position:absolute;top:0;left:0;height:600px;max-width:1600px;width:100%;background-color:rgba(0, 0, 0, .75);background-image:url('{{ tmp_photo.url }}');background-blend-mode:overlay;background-size:cover;border-bottom:solid thick black;overflow: visible;"></div>
-                <div class="embed-youtube">
-                    <iframe src="//www.youtube.com/embed/{{ movie.youtube_id }}" width="750" height="563"></iframe>
+        <div class="mt-5 mb-5" >
+            <div class="d-flex p-5 flex-row{% if not forloop.first %}-reverse{% endif %} justify-content-between align-items-center flex-wrap" style="height:600px;width:100%;background-color:rgba(0, 0, 0, .95);background-image:url('{{ tmp_photo.url }}');background-blend-mode:overlay;background-size:cover;border-bottom:solid thick black;overflow: visible;">
+                <div class="text-white flex-grow-1 text-center mb-4">
+                    <h2>{{ movie.title }}</h2>
+                    <h3>Opening: {{ movie.open_date }}<br />Closing: {{ movie.close_date }}</h3>
+                    <a href="" class="btn btn-primary mb-2">More Info</a>
+                    <a href="" class="btn btn-outline-light mb-2">Rick's Review</a>
                 </div>
+                <div style="margin:auto;position:relative;z-index:0;width:40%;min-width:320px;height:400px;background-color:yellow;background-image:url('{{ tmp_photo.url }}');background-size:cover;background-position: center center;">
+                    <a data-fancybox href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" class="d-flex justify-content-center align-items-center" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;">
+                        <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         {% endfor %}
 
