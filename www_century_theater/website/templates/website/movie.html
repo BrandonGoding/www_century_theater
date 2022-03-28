@@ -30,7 +30,7 @@
     </div>
     <div class="container">
         <div class="row mt-4">
-            <div class="col-md-8 pb-4" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <div class="col-md-8 pb-4 d-flex  justify-content-between flex-column">
                 {% if imdb_title_data %}
                     <div class="row">
                         <div class="col-md-4">
@@ -72,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-4" style="display: flex;align-items:end">
+                    <div class="row mt-4 d-flex align-items-end">
                         {% for actor in imdb_title_data.actorList %}
                             {% if actor.name in imdb_title_data.stars %}
                                 <div class="col-md-4">
@@ -93,7 +93,9 @@
             <div class="col-md-4">
                 {% if showtimes %}
                     <h4 class="mt-4">Show Times:</h4>
-                    <ul>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
                         {% for showtime in showtimes %}
                             <li class="mt-2">
                                 <h6>{{ showtime.date|date:"l, F j, Y" }}</h6>
@@ -107,6 +109,25 @@
                             </li>
                         {% endfor %}
                     </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                        {% for showtime in showtimes %}
+                            <li class="mt-2">
+                                <h6>{{ showtime.date|date:"l, F j, Y" }}</h6>
+                                <ul>
+                                    {% for time in showtime.times %}
+                                        <li>
+                                            {{ time|date:"g:i A" }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                        </div>
+                    </div>
+
                 {% endif %}
                 {% if reviews.imDb or reviews.metacritic or reviews.theMovieDb or reviews.rottenTomatoes or reviews.filmAffinity %}
                     <div class="row mt-4 mb-4">

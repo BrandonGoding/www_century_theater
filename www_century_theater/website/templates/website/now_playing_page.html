@@ -37,7 +37,7 @@
                     <a href="{{ movie.review_page.url }}" class="btn btn-outline-light mb-2">{{ movie.review_page.author.first_name }}'s Review</a>
                     {% endif %}
                 </div>
-                <div style="margin:auto;position:relative;z-index:0;width:40%;min-width:320px;height:400px;background-color:yellow;background-image:url('{{ tmp_photo.url }}');background-size:cover;background-position: center center;">
+                <div style="margin:auto;position:relative;z-index:0;width:40%;min-width:320px;height:400px;background-image:url('{{ tmp_photo.url }}');background-size:cover;background-position: center center;">
                     <a data-fancybox href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" class="d-flex justify-content-center align-items-center" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;">
                         <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
                     </a>

@@ -240,6 +240,7 @@ class NowPlayingPage(RoutablePageMixin, Page):
     def upcoming_movies_page(self, request, *args, **kwargs):
         context = self.get_context(request, *args, **kwargs)
         context['movies'] = Movie.objects.filter(open_date__gt=datetime.datetime.now() - datetime.timedelta(days=31))
+        context['up_next'] = Movie.objects.filter(open_date__gt=datetime.datetime.now()).order_by('open_date')[:2]
         return render(request, "website/upcoming_movies.html", context)
 
 

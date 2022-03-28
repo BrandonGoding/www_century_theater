@@ -161,15 +161,15 @@ class BlogRollPage(RoutablePageMixin, Page):
             'related_posts': posts,
         }, template=template)
 
-    @route(r'^categories/(?P<category_slug>[-\w]*)/$')  # will override the default Page serving mechanism
+    @route(r'^category/(?P<category_slug>[-\w]*)/$')  # will override the default Page serving mechanism
     def recent_posts_by_category(self, request, category_slug):
         """
         View function for the current events page
         """
         try:
             category = BlogCategory.objects.get(slug=category_slug)
-            featured_post = BlogPage.objects.order_by('-post_date').filter(categories__in=[category.id]).live()[:1]
-            posts = BlogPage.objects.order_by('-post_date').filter(categories__in=[category.id]).live()[1:5]
+            featured_post = BlogPage.objects.order_by('-post_date').filter(category=category).live()[:1]
+            posts = BlogPage.objects.order_by('-post_date').filter(category=category).live()[1:5]
         except:
             featured_post = []
             posts = []
@@ -181,7 +181,13 @@ class BlogRollPage(RoutablePageMixin, Page):
 
 class BlogPage(Page):
     author = models.ForeignKey(to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL)
-    categories = ParentalManyToManyField("blog.BlogCategory", blank=True)
+    category = models.ForeignKey(
+        "blog.BlogCategory",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
     post_date = models.DateField(auto_created=True, null=False, blank=False)
     featured_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -219,15 +225,10 @@ class BlogPage(Page):
             [
                 SnippetChooserPanel('author'),
                 FieldPanel('post_date'),
+                FieldPanel("category"),
                 FieldPanel('content'),
             ],
             heading="Author & Content"
-        ),
-        MultiFieldPanel(
-            [
-                FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
-            ],
-            heading="Categories"
         ),
         MultiFieldPanel(
             [
@@ -240,16 +241,9 @@ class BlogPage(Page):
     parent_page_types = ['blog.BlogRollPage']
     subpage_types = []
 
-    @property
-    def category_list(self):
-        cat_list = []
-        for cat in self.categories.all():
-            cat_list.append(cat.id)
-        return cat_list
-
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
         context['routable_target'] = self.get_parent().specific
-        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(categories__in=self.category_list).exclude(id=self.id).live()[:4]
+        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(category=self.category).exclude(id=self.id).live()[:4]
         return context

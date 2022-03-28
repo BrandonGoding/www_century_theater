@@ -1,5 +1,5 @@
 {% extends 'website/base.html' %}
-{% load static %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.css">
@@ -43,7 +43,22 @@
 
     <div class="container mt-4 mb-4">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-4">
+                <h2>Up Next:</h2>
+                {% for movie in up_next %}
+                <div class="card mt-4 mb-4">
+                    {% image movie.featured_image fill-286x180 class="card-img-top" %}
+                    <div class="card-body">
+                        <div class="small text-muted">{{ movie.open_date|date:"l F d, Y" }}</div>
+                        <h3 class="card-title h5">{{ movie.title }}</h3>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="{% routablepageurl page 'movie_detail_page' movie.slug %}" class="btn btn-primary btn-sm">More Info</a>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            <div class="col-md-8">
                 <div id='calendar'></div>
             </div>
         </div>
