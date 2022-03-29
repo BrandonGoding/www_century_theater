@@ -171,7 +171,7 @@ class NowPlayingPage(RoutablePageMixin, Page):
 
     def get_context(self, value, *args, **kwargs):
         context = super(NowPlayingPage, self).get_context(value)
-        context['now_playing'] = Movie.objects.filter(open_date__lte=timezone.now(), close_date__gte=timezone.now()).order_by('open_date')[:2]
+        context['now_playing'] = Movie.objects.filter(close_date__gte=self.first_day_of_week).order_by('open_date')[:2]
         return context
 
     @route(r"^(?P<slug>[-\w]*)/detail/$")

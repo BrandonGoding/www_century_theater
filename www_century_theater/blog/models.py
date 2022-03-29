@@ -245,5 +245,5 @@ class BlogPage(Page):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
         context['routable_target'] = self.get_parent().specific
-        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(category=self.category).exclude(id=self.id).live()[:4]
+        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(category=self.category).exclude(id=self.id).live()[:3]
         return context

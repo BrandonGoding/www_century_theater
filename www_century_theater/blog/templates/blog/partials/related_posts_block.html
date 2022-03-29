@@ -1,8 +1,8 @@
 {% load static wagtailimages_tags %}
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         {% for post in related_posts %}
-        <div class="col-lg-3">
+        <div class="col-lg-4">
             <div class="card mb-4">
                 <a href="{{ post.url }}">{% image post.featured_image fill-451x299-c50 class="card-img-top" %}</a>
                 <div class="card-body">
