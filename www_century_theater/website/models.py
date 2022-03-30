@@ -38,9 +38,7 @@ class BasicPage(Page):
 
     def get_context(self, value, *args, **kwargs):
         context = super(BasicPage, self).get_context(value)
-        context['featured_post'] = BlogPage.objects.order_by('-post_date').live()[:1]
-        context['second_post'] = BlogPage.objects.order_by('-post_date').live()[1:2]
-        context['post_row'] = BlogPage.objects.order_by('-post_date').live()[2:5]
+        context['post_row'] = BlogPage.objects.order_by('-post_date').live()[:3]
         return context
 
 
