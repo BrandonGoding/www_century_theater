@@ -90,7 +90,7 @@
                         title: '{{ movie }}{% if not movie.confirmed %} (Unconfirmed){% endif %}', // a property!
                         start: '{{ movie.open_date|date:"Y-m-d" }}', // a property!
                         end: '{{movie.last_day_for_calender|date:"Y-m-d" }}', // a property! ** see important note below about 'end' **
-                        color: '{% if movie.confirmed %}darkgreen{% else %}darkblue{% endif %}',
+                        color: '{% if movie.confirmed %}#425b76{% else %}#282c34{% endif %}',
                         borderColor: 'black',
                         url: '{% routablepageurl page 'movie_detail_page' movie.slug %}',
                         extendedProps: {

@@ -118,6 +118,30 @@ class BlogCategory(models.Model):
         return self.name
 
 
+@register_snippet
+class BlogTag(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(
+        verbose_name="slug",
+        allow_unicode=True,
+        max_length=255,
+        help_text="A slug to identify posts by this tag"
+    )
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("slug"),
+    ]
+
+    class Meta:
+        verbose_name = "Blog Tag"
+        verbose_name_plural = "Blog Tags"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class BlogRollPage(RoutablePageMixin, Page):
     max_count = 1
     subpage_types = ['blog.BlogPage']
@@ -125,6 +149,7 @@ class BlogRollPage(RoutablePageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         context = super(BlogRollPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
+        context['tags'] = BlogTag.objects.all()
         context['routable_target'] = self.get_latest_revision_as_page().specific
         return context
 
@@ -155,7 +180,7 @@ class BlogRollPage(RoutablePageMixin, Page):
     def recent_posts_by_author(self, request, author_slug):
         template = 'blog/blog_author.html'
         author = BlogAuthor.objects.get(slug=author_slug)
-        posts = BlogPage.objects.order_by('-post_date').filter(author__slug=author_slug).live()[:4]
+        posts = BlogPage.objects.order_by('-post_date').filter(author__slug=author_slug).live()[:3]
         return self.render(request, context_overrides={
             'author': author,
             'related_posts': posts,
@@ -178,14 +203,42 @@ class BlogRollPage(RoutablePageMixin, Page):
             'posts': posts,
         })
 
+    @route(r'^tag/(?P<tag_slug>[-\w]*)/$')  # will override the default Page serving mechanism
+    def recent_posts_by_tag(self, request, tag_slug):
+        """
+        View function for the current events page
+        """
+        try:
+            tag = BlogTag.objects.get(slug=tag_slug)
+            featured_post = BlogPage.objects.order_by('-post_date').filter(tag=tag).live()[:1]
+            posts = BlogPage.objects.order_by('-post_date').filter(tag=tag).live()[1:5]
+        except:
+            featured_post = []
+            posts = []
+        return self.render(request, context_overrides={
+            'featured_post': featured_post,
+            'posts': posts,
+        })
+
 
 class BlogPage(Page):
     author = models.ForeignKey(to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL)
+    movie = models.ForeignKey(
+        "website.Movie",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="+"
+    )
     category = models.ForeignKey(
         "blog.BlogCategory",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        related_name="+"
+    )
+    tag = ParentalManyToManyField(
+        "blog.BlogTag",
         related_name="+"
     )
     post_date = models.DateField(auto_created=True, null=False, blank=False)
@@ -224,8 +277,10 @@ class BlogPage(Page):
         MultiFieldPanel(
             [
                 SnippetChooserPanel('author'),
+                FieldPanel('movie'),
                 FieldPanel('post_date'),
                 FieldPanel("category"),
+                FieldPanel("tag", widget=forms.CheckboxSelectMultiple),
                 FieldPanel('content'),
             ],
             heading="Author & Content"
@@ -244,6 +299,7 @@ class BlogPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
         context['categories'] = BlogCategory.objects.all()
+        context['tags'] = BlogTag.objects.all()
         context['routable_target'] = self.get_parent().specific
         context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(category=self.category).exclude(id=self.id).live()[:3]
         return context

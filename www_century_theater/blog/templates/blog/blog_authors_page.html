@@ -25,7 +25,7 @@
                         {% endif %}
                         <div class="col-lg-6">
                             <div class="card mb-4">
-                                <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-700x350-c100 class="card-img-top" %}</a>
+                                <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-400x350-c20 class="card-img-top" %}</a>
                                 <div class="card-body">
                                     <div class="small text-muted">{{ post.tagline }}</div>
                                     <h2 class="card-title h4">{{ post.full_name }}</h2>
@@ -45,6 +45,7 @@
                     {% include 'blog/partials/site_search_block.html' %}
                     <!-- Categories widget-->
                     {% include 'blog/partials/blog_categories_block.html' %}
+                    {% include 'blog/partials/blog_tags_block.html' %}
                 </div>
             </div>
         </div>

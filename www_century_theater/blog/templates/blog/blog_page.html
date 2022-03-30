@@ -18,8 +18,8 @@
                             <div class="text-muted fst-italic mb-2">Posted on {{ self.post_date|date:"l F d, Y"  }}{% if self.author %} by
                                 <a href="{% routablepageurl routable_target "recent_posts_by_author" self.author.slug %}">{{ self.author.full_name }}</a>{% endif %}</div>
                             <!-- Post categories-->
-                            {% for category in self.categories.all %}
-                            <a class="badge bg-secondary text-decoration-none link-light" href="{% routablepageurl routable_target "recent_posts_by_category" category.slug %}">{{ category.name }}</a>
+                            {% for tag in self.tag.all %}
+                            <a class="badge bg-secondary text-decoration-none link-light" href="{% routablepageurl routable_target "recent_posts_by_tag" tag.slug %}">{{ tag.name }}</a>
                             {% endfor %}
                         </header>
                         <!-- Preview image figure-->
@@ -36,6 +36,7 @@
                     {% include 'blog/partials/site_search_block.html' %}
                     <!-- Categories widget-->
                     {% include 'blog/partials/blog_categories_block.html' %}
+                    {% include 'blog/partials/blog_tags_block.html' %}
                 </div>
             </div>
         </div>
