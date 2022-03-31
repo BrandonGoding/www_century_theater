@@ -195,10 +195,13 @@ class NowPlayingPage(RoutablePageMixin, Page):
                 show_dates = []
                 for show_date in movie.showtimes.all():
                     if show_date.show_date not in [value for elem in show_dates for value in elem.values()] and show_date.show_date.isocalendar().week == datetime.datetime.fromisoformat(str(week.show_date)).isocalendar().week:
+                        time_list = []
+                        for time in ShowTime.objects.filter(show_date=show_date.show_date, movie_id=movie.id):
+                            time_list.append(time.show_time)
                         show_dates.append(
                             {
                                 "date": show_date.show_date,
-                                "times": "TEST"
+                                "times": time_list
                             }
                         )
 
