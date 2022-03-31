@@ -1,7 +1,6 @@
 import datetime
 
 from django.shortcuts import render, get_object_or_404
-from django.utils import timezone
 from django.db import models
 from django.utils.text import slugify
 from modelcluster.fields import ParentalKey
@@ -13,7 +12,6 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.snippets.models import register_snippet
 
 from blog.models import BlogPage
 from streams.blocks import ParallaxBlock, FeaturesListBlock, TeamHighlightBlock, RecentPostsBlock, StudiosBlock
@@ -172,47 +170,67 @@ class NowPlayingPage(RoutablePageMixin, Page):
         context['now_playing'] = Movie.objects.filter(close_date__gte=self.first_day_of_week).order_by('open_date')[:2]
         return context
 
+    @staticmethod
+    def get_imdb_json(movie):
+        title_dict = dict()
+        title_dict['data'] = requests.get(
+            f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{movie.imdb_id}").json()
+        title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        with open(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json', 'w') as f:
+            json.dump(title_dict, f)
+        f.close()
+        return title_dict.get('data')
+
     @route(r"^(?P<slug>[-\w]*)/detail/$")
     def movie_detail_page(self, request, slug, *args, **kwargs):
         context = self.get_context(request, *args, **kwargs)
         movie = get_object_or_404(Movie, slug=slug)
         context['movie'] = movie
         showtimes = []
-        show_dates = []
+        show_week = []
 
-        for show_date in movie.showtimes.all():
-            if show_date.show_date not in show_dates:
-                show_dates.append(show_date.show_date)
+        for week in movie.showtimes.all():
 
-        for show_date in show_dates:
-            time_list = []
-            temp_dict = dict()
-            temp_dict['date'] = show_date
-            for time in ShowTime.objects.filter(show_date=show_date, movie_id=movie.id):
-                time_list.append(time.show_time)
-                temp_dict['times'] = time_list
-            showtimes.append(temp_dict)
+            if datetime.datetime.fromisoformat(str(week.show_date)).isocalendar().week not in [value for elem in show_week for value in elem.values()]:
+                show_dates = []
+                for show_date in movie.showtimes.all():
+                    if show_date.show_date not in [value for elem in show_dates for value in elem.values()] and show_date.show_date.isocalendar().week == datetime.datetime.fromisoformat(str(week.show_date)).isocalendar().week:
+                        show_dates.append(
+                            {
+                                "date": show_date.show_date,
+                                "times": "TEST"
+                            }
+                        )
 
-        context['showtimes'] = showtimes
+                show_week.append(
+                    {
+                        "week": datetime.datetime.fromisoformat(str(week.show_date)).isocalendar().week,
+                        "dates": show_dates
+                    }
+                )
+
+
+        # for show_date in show_dates:
+        #     time_list = []
+        #     temp_dict = dict()
+        #     temp_dict['date'] = show_date
+        #     for time in ShowTime.objects.filter(show_date=show_date, movie_id=movie.id):
+        #         time_list.append(time.show_time)
+        #         temp_dict['times'] = time_list
+        #     showtimes.append(temp_dict)
+
+        context['showtimes'] = show_week
 
         if movie.imdb_id:
             if not os.path.exists(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json'):
-                title_dict = dict()
-                title_dict['data'] = requests.get(
-                    f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{movie.imdb_id}").json()
-                title_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-                with open(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json', 'w') as f:
-                    json.dump(title_dict, f)
-                f.close()
-                context['imdb_title_data'] = title_dict.get('data')
+                context['imdb_title_data'] = self.get_imdb_json(movie)
             else:
-                # Opening JSON file
                 f = open(f'{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json')
-                # returns JSON object as
-                # a dictionary
                 title_dict = json.load(f)
-                context['imdb_title_data'] = title_dict.get('data')
-                # Closing file
+                if datetime.datetime.fromisoformat(title_dict.get('timestamp')) + datetime.timedelta(hours=24) < datetime.datetime.now():
+                    context['imdb_title_data'] = self.get_imdb_json(movie)
+                else:
+                    context['imdb_title_data'] = title_dict.get('data')
                 f.close()
 
             if not os.path.exists(f'{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json'):
@@ -223,15 +241,9 @@ class NowPlayingPage(RoutablePageMixin, Page):
                 f.close()
                 context['reviews'] = response
             else:
-                # Opening JSON file
                 f = open(f'{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json')
-
-                # returns JSON object as
-                # a dictionary
                 context['reviews'] = json.load(f)
-                # Closing file
                 f.close()
-        
         return render(request, "website/movie.html", context)
 
     @route(r"upcoming/$")
