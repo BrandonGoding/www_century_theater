@@ -14,32 +14,35 @@ from wagtail.snippets.models import register_snippet
 @register_snippet
 class BlogAuthor(models.Model):
     """Blog author for snippets."""
+
     last_name = models.CharField(max_length=45)
     first_name = models.CharField(max_length=65)
-    tagline = models.CharField(max_length=120, default="This is a tagline please update it.")
+    tagline = models.CharField(
+        max_length=120, default="This is a tagline please update it."
+    )
     slug = models.SlugField(null=True, blank=False)
     bio = RichTextField(
         blank=True,
         null=True,
         features=[
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'bold',
-            'italic',
-            'ol',
-            'ul',
-            'hr',
-            'link',
-            'document-link',
-            'image',
-            'embed',
-            'superscript',
-            'subscript',
-            'strikethrough',
-            'blockquote'
-        ]
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "bold",
+            "italic",
+            "ol",
+            "ul",
+            "hr",
+            "link",
+            "document-link",
+            "image",
+            "embed",
+            "superscript",
+            "subscript",
+            "strikethrough",
+            "blockquote",
+        ],
     )
     website = models.URLField(blank=True, null=True)
     facebook = models.URLField(blank=True, null=True)
@@ -74,8 +77,8 @@ class BlogAuthor(models.Model):
                 FieldPanel("linkedin"),
                 FieldPanel("instagram"),
             ],
-            heading="Links"
-        )
+            heading="Links",
+        ),
     ]
 
     def __str__(self):
@@ -101,7 +104,7 @@ class BlogCategory(models.Model):
         verbose_name="slug",
         allow_unicode=True,
         max_length=255,
-        help_text="A slug to identify posts by this category"
+        help_text="A slug to identify posts by this category",
     )
 
     panels = [
@@ -112,7 +115,7 @@ class BlogCategory(models.Model):
     class Meta:
         verbose_name = "Blog Category"
         verbose_name_plural = "Blog Categories"
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -125,7 +128,7 @@ class BlogTag(models.Model):
         verbose_name="slug",
         allow_unicode=True,
         max_length=255,
-        help_text="A slug to identify posts by this tag"
+        help_text="A slug to identify posts by this tag",
     )
 
     panels = [
@@ -136,7 +139,7 @@ class BlogTag(models.Model):
     class Meta:
         verbose_name = "Blog Tag"
         verbose_name_plural = "Blog Tags"
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -144,103 +147,137 @@ class BlogTag(models.Model):
 
 class BlogRollPage(RoutablePageMixin, Page):
     max_count = 1
-    subpage_types = ['blog.BlogPage']
+    subpage_types = ["blog.BlogPage"]
 
     def get_context(self, request, *args, **kwargs):
         context = super(BlogRollPage, self).get_context(request)
-        context['categories'] = BlogCategory.objects.all()
-        context['tags'] = BlogTag.objects.all()
-        context['routable_target'] = self.get_latest_revision_as_page().specific
+        context["categories"] = BlogCategory.objects.all()
+        context["tags"] = BlogTag.objects.all()
+        context["routable_target"] = self.get_latest_revision_as_page().specific
         return context
 
-    @route(r'^$')  # will override the default Page serving mechanism
+    @route(r"^$")  # will override the default Page serving mechanism
     def recent_posts(self, request):
         """
         View function for the current events page
         """
-        featured_post = BlogPage.objects.order_by('-post_date').live()[:1]
-        posts = BlogPage.objects.order_by('-post_date').live()[1:5]
-        return self.render(request, context_overrides={
-            'featured_post': featured_post,
-            'posts': posts,
-        })
+        featured_post = BlogPage.objects.order_by("-post_date").live()[:1]
+        posts = BlogPage.objects.order_by("-post_date").live()[1:5]
+        return self.render(
+            request,
+            context_overrides={
+                "featured_post": featured_post,
+                "posts": posts,
+            },
+        )
 
-    @route(r'^authors/$')  # will override the default Page serving mechanism
+    @route(r"^authors/$")  # will override the default Page serving mechanism
     def authors_list(self, request):
         """
         View function for the current events page
         """
-        template = 'blog/blog_authors_page.html'
+        template = "blog/blog_authors_page.html"
         posts = BlogAuthor.objects.all()
-        return self.render(request, context_overrides={
-            'posts': posts,
-        }, template=template)
+        return self.render(
+            request,
+            context_overrides={
+                "posts": posts,
+            },
+            template=template,
+        )
 
-    @route(r'^authors/(?P<author_slug>[-\w]*)/$')
+    @route(r"^authors/(?P<author_slug>[-\w]*)/$")
     def recent_posts_by_author(self, request, author_slug):
-        template = 'blog/blog_author.html'
+        template = "blog/blog_author.html"
         author = BlogAuthor.objects.get(slug=author_slug)
-        posts = BlogPage.objects.order_by('-post_date').filter(author__slug=author_slug).live()[:3]
-        return self.render(request, context_overrides={
-            'author': author,
-            'related_posts': posts,
-        }, template=template)
+        posts = (
+            BlogPage.objects.order_by("-post_date")
+            .filter(author__slug=author_slug)
+            .live()[:3]
+        )
+        return self.render(
+            request,
+            context_overrides={
+                "author": author,
+                "related_posts": posts,
+            },
+            template=template,
+        )
 
-    @route(r'^category/(?P<category_slug>[-\w]*)/$')  # will override the default Page serving mechanism
+    @route(
+        r"^category/(?P<category_slug>[-\w]*)/$"
+    )  # will override the default Page serving mechanism
     def recent_posts_by_category(self, request, category_slug):
         """
         View function for the current events page
         """
         try:
             category = BlogCategory.objects.get(slug=category_slug)
-            featured_post = BlogPage.objects.order_by('-post_date').filter(category=category).live()[:1]
-            posts = BlogPage.objects.order_by('-post_date').filter(category=category).live()[1:5]
+            featured_post = (
+                BlogPage.objects.order_by("-post_date")
+                .filter(category=category)
+                .live()[:1]
+            )
+            posts = (
+                BlogPage.objects.order_by("-post_date")
+                .filter(category=category)
+                .live()[1:5]
+            )
         except:
             featured_post = []
             posts = []
-        return self.render(request, context_overrides={
-            'featured_post': featured_post,
-            'posts': posts,
-        })
+        return self.render(
+            request,
+            context_overrides={
+                "featured_post": featured_post,
+                "posts": posts,
+            },
+        )
 
-    @route(r'^tag/(?P<tag_slug>[-\w]*)/$')  # will override the default Page serving mechanism
+    @route(
+        r"^tag/(?P<tag_slug>[-\w]*)/$"
+    )  # will override the default Page serving mechanism
     def recent_posts_by_tag(self, request, tag_slug):
         """
         View function for the current events page
         """
         try:
             tag = BlogTag.objects.get(slug=tag_slug)
-            featured_post = BlogPage.objects.order_by('-post_date').filter(tag=tag).live()[:1]
-            posts = BlogPage.objects.order_by('-post_date').filter(tag=tag).live()[1:5]
+            featured_post = (
+                BlogPage.objects.order_by("-post_date").filter(tag=tag).live()[:1]
+            )
+            posts = BlogPage.objects.order_by("-post_date").filter(tag=tag).live()[1:5]
         except:
             featured_post = []
             posts = []
-        return self.render(request, context_overrides={
-            'featured_post': featured_post,
-            'posts': posts,
-        })
+        return self.render(
+            request,
+            context_overrides={
+                "featured_post": featured_post,
+                "posts": posts,
+            },
+        )
 
 
 class BlogPage(Page):
-    author = models.ForeignKey(to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(
+        to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL
+    )
     movie = models.ForeignKey(
         "website.Movie",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name="+"
+        related_name="+",
     )
     category = models.ForeignKey(
         "blog.BlogCategory",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name="+"
+        related_name="+",
     )
-    tag = ParentalManyToManyField(
-        "blog.BlogTag",
-        related_name="+"
-    )
+    tag = ParentalManyToManyField("blog.BlogTag", related_name="+")
     post_date = models.DateField(auto_created=True, null=False, blank=False)
     featured_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -253,53 +290,58 @@ class BlogPage(Page):
         blank=True,
         null=True,
         features=[
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'bold',
-            'italic',
-            'ol',
-            'ul',
-            'hr',
-            'link',
-            'document-link',
-            'image',
-            'embed',
-            'superscript',
-            'subscript',
-            'strikethrough',
-            'blockquote'
-        ]
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "bold",
+            "italic",
+            "ol",
+            "ul",
+            "hr",
+            "link",
+            "document-link",
+            "image",
+            "embed",
+            "superscript",
+            "subscript",
+            "strikethrough",
+            "blockquote",
+        ],
     )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
-                SnippetChooserPanel('author'),
-                FieldPanel('movie'),
-                FieldPanel('post_date'),
+                SnippetChooserPanel("author"),
+                FieldPanel("movie"),
+                FieldPanel("post_date"),
                 FieldPanel("category"),
                 FieldPanel("tag", widget=forms.CheckboxSelectMultiple),
-                FieldPanel('content'),
+                FieldPanel("content"),
             ],
-            heading="Author & Content"
+            heading="Author & Content",
         ),
         MultiFieldPanel(
             [
                 ImageChooserPanel("featured_image"),
             ],
-            heading="Featured Image"
-        )
+            heading="Featured Image",
+        ),
     ]
 
-    parent_page_types = ['blog.BlogRollPage']
+    parent_page_types = ["blog.BlogRollPage"]
     subpage_types = []
 
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
-        context['categories'] = BlogCategory.objects.all()
-        context['tags'] = BlogTag.objects.all()
-        context['routable_target'] = self.get_parent().specific
-        context['related_posts'] = BlogPage.objects.order_by('-post_date').filter(category=self.category).exclude(id=self.id).live()[:3]
+        context["categories"] = BlogCategory.objects.all()
+        context["tags"] = BlogTag.objects.all()
+        context["routable_target"] = self.get_parent().specific
+        context["related_posts"] = (
+            BlogPage.objects.order_by("-post_date")
+            .filter(category=self.category)
+            .exclude(id=self.id)
+            .live()[:3]
+        )
         return context

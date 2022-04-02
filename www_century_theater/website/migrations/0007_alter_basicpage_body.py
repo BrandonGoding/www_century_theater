@@ -9,13 +9,71 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0006_alter_basicpage_body'),
+        ("website", "0006_alter_basicpage_body"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='basicpage',
-            name='body',
-            field=wagtail.core.fields.StreamField([('parallax_section', wagtail.core.blocks.StructBlock([('header', wagtail.core.blocks.CharBlock(max_length=30, required=False)), ('sub_header', wagtail.core.blocks.CharBlock(max_length=250, required=False)), ('background_image', wagtail.images.blocks.ImageChooserBlock(required=True))])), ('feature_list_section', wagtail.core.blocks.StructBlock([('features', wagtail.core.blocks.ListBlock(wagtail.core.blocks.StructBlock([('feature_name', wagtail.core.blocks.CharBlock(max_length=25, required=True)), ('feature_summary', wagtail.core.blocks.CharBlock(max_length=255, required=True))])))]))], blank=True, null=True),
+            model_name="basicpage",
+            name="body",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "parallax_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "header",
+                                    wagtail.core.blocks.CharBlock(
+                                        max_length=30, required=False
+                                    ),
+                                ),
+                                (
+                                    "sub_header",
+                                    wagtail.core.blocks.CharBlock(
+                                        max_length=250, required=False
+                                    ),
+                                ),
+                                (
+                                    "background_image",
+                                    wagtail.images.blocks.ImageChooserBlock(
+                                        required=True
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    (
+                        "feature_list_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "features",
+                                    wagtail.core.blocks.ListBlock(
+                                        wagtail.core.blocks.StructBlock(
+                                            [
+                                                (
+                                                    "feature_name",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=25, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "feature_summary",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=255, required=True
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    ),
+                                )
+                            ]
+                        ),
+                    ),
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
     ]

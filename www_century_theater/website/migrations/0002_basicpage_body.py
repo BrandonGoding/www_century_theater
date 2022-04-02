@@ -9,13 +9,31 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0001_initial'),
+        ("website", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='basicpage',
-            name='body',
-            field=wagtail.core.fields.StreamField([('parallax_section', wagtail.core.blocks.StructBlock([('background_image', wagtail.images.blocks.ImageChooserBlock(required=True))]))], blank=True, null=True),
+            model_name="basicpage",
+            name="body",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "parallax_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "background_image",
+                                    wagtail.images.blocks.ImageChooserBlock(
+                                        required=True
+                                    ),
+                                )
+                            ]
+                        ),
+                    )
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
     ]

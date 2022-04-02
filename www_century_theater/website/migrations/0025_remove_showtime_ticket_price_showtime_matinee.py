@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0024_showtime'),
+        ("website", "0024_showtime"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='showtime',
-            name='ticket_price',
+            model_name="showtime",
+            name="ticket_price",
         ),
         migrations.AddField(
-            model_name='showtime',
-            name='matinee',
+            model_name="showtime",
+            name="matinee",
             field=models.BooleanField(default=False),
         ),
     ]

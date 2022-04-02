@@ -9,19 +9,27 @@ from django.utils.timezone import utc
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0012_blogauthor_tagline'),
-        ('website', '0031_movie_review_page_alter_showtime_show_date'),
+        ("blog", "0012_blogauthor_tagline"),
+        ("website", "0031_movie_review_page_alter_showtime_show_date"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movie',
-            name='review_page',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='blog.blogpage'),
+            model_name="movie",
+            name="review_page",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="blog.blogpage",
+            ),
         ),
         migrations.AlterField(
-            model_name='showtime',
-            name='show_date',
-            field=models.DateField(default=datetime.datetime(2022, 3, 16, 14, 58, 9, 529985, tzinfo=utc)),
+            model_name="showtime",
+            name="show_date",
+            field=models.DateField(
+                default=datetime.datetime(2022, 3, 16, 14, 58, 9, 529985, tzinfo=utc)
+            ),
         ),
     ]

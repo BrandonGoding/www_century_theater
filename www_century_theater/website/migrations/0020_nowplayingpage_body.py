@@ -8,13 +8,53 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0019_alter_movie_rating'),
+        ("website", "0019_alter_movie_rating"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='nowplayingpage',
-            name='body',
-            field=wagtail.core.fields.StreamField([('feature_list_section', wagtail.core.blocks.StructBlock([('feature', wagtail.core.blocks.ListBlock(wagtail.core.blocks.StructBlock([('feature_name', wagtail.core.blocks.CharBlock(max_length=25, required=True)), ('feature_summary', wagtail.core.blocks.CharBlock(max_length=255, required=True)), ('icon_id', wagtail.core.blocks.CharBlock(max_length=24, required=False))])))])), ('recent_post_section', wagtail.core.blocks.StructBlock([]))], blank=True, null=True),
+            model_name="nowplayingpage",
+            name="body",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "feature_list_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "feature",
+                                    wagtail.core.blocks.ListBlock(
+                                        wagtail.core.blocks.StructBlock(
+                                            [
+                                                (
+                                                    "feature_name",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=25, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "feature_summary",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=255, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "icon_id",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=24, required=False
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    ),
+                                )
+                            ]
+                        ),
+                    ),
+                    ("recent_post_section", wagtail.core.blocks.StructBlock([])),
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
     ]

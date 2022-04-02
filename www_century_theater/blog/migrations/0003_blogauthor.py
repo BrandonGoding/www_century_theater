@@ -8,30 +8,48 @@ import wagtail.core.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wagtailcore', '0066_collection_management_permissions'),
-        ('wagtailimages', '0023_add_choose_permissions'),
-        ('blog', '0002_remove_blogpage_author_delete_blogauthor'),
+        ("wagtailcore", "0066_collection_management_permissions"),
+        ("wagtailimages", "0023_add_choose_permissions"),
+        ("blog", "0002_remove_blogpage_author_delete_blogauthor"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BlogAuthor',
+            name="BlogAuthor",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('last_name', models.CharField(max_length=45)),
-                ('first_name', models.CharField(max_length=65)),
-                ('bio', wagtail.core.fields.RichTextField(blank=True, null=True)),
-                ('website', models.URLField(blank=True, null=True)),
-                ('facebook', models.URLField(blank=True, null=True)),
-                ('twitter', models.URLField(blank=True, null=True)),
-                ('linkedin', models.URLField(blank=True, null=True)),
-                ('instagram', models.URLField(blank=True, null=True)),
-                ('image', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
+                ("last_name", models.CharField(max_length=45)),
+                ("first_name", models.CharField(max_length=65)),
+                ("bio", wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ("website", models.URLField(blank=True, null=True)),
+                ("facebook", models.URLField(blank=True, null=True)),
+                ("twitter", models.URLField(blank=True, null=True)),
+                ("linkedin", models.URLField(blank=True, null=True)),
+                ("instagram", models.URLField(blank=True, null=True)),
+                (
+                    "image",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailimages.image",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Blog Author',
-                'verbose_name_plural': 'Blog Authors',
+                "verbose_name": "Blog Author",
+                "verbose_name_plural": "Blog Authors",
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
     ]

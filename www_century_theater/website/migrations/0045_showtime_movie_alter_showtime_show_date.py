@@ -10,18 +10,25 @@ import modelcluster.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0044_remove_showtime_movie_alter_showtime_show_date'),
+        ("website", "0044_remove_showtime_movie_alter_showtime_show_date"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='showtime',
-            name='movie',
-            field=modelcluster.fields.ParentalKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='showtimes', to='website.movie'),
+            model_name="showtime",
+            name="movie",
+            field=modelcluster.fields.ParentalKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="showtimes",
+                to="website.movie",
+            ),
         ),
         migrations.AlterField(
-            model_name='showtime',
-            name='show_date',
-            field=models.DateField(default=datetime.datetime(2022, 3, 19, 1, 53, 23, 678385, tzinfo=utc)),
+            model_name="showtime",
+            name="show_date",
+            field=models.DateField(
+                default=datetime.datetime(2022, 3, 19, 1, 53, 23, 678385, tzinfo=utc)
+            ),
         ),
     ]

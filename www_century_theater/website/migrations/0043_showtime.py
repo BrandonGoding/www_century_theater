@@ -9,23 +9,48 @@ from django.utils.timezone import utc
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0042_delete_showtime'),
+        ("website", "0042_delete_showtime"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ShowTime',
+            name="ShowTime",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('show_date', models.DateField(default=datetime.datetime(2022, 3, 19, 1, 51, 3, 124740, tzinfo=utc))),
-                ('show_time', models.TimeField()),
-                ('matinee', models.BooleanField(default=False)),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='showtimes', to='website.movie')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                (
+                    "show_date",
+                    models.DateField(
+                        default=datetime.datetime(
+                            2022, 3, 19, 1, 51, 3, 124740, tzinfo=utc
+                        )
+                    ),
+                ),
+                ("show_time", models.TimeField()),
+                ("matinee", models.BooleanField(default=False)),
+                (
+                    "movie",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="showtimes",
+                        to="website.movie",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['sort_order'],
-                'abstract': False,
+                "ordering": ["sort_order"],
+                "abstract": False,
             },
         ),
     ]

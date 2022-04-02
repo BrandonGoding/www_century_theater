@@ -7,14 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0056_basicpage_body_nowplayingpage_body'),
-        ('blog', '0018_alter_blogpage_tag'),
+        ("website", "0056_basicpage_body_nowplayingpage_body"),
+        ("blog", "0018_alter_blogpage_tag"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='movie',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='website.movie'),
+            model_name="blogpage",
+            name="movie",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="website.movie",
+            ),
         ),
     ]

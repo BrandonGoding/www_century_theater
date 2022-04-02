@@ -6,13 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0018_movie_youtube_id'),
+        ("website", "0018_movie_youtube_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movie',
-            name='rating',
-            field=models.CharField(blank=True, choices=[('G - General Audiences', 'G'), ('PG - Parental Guidance Suggested', 'PG'), ('PG-13 Parents Strongly Cautioned', 'PG-13'), ('NC-17 - Adults Only', 'NC-17')], max_length=35, null=True),
+            model_name="movie",
+            name="rating",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("G - General Audiences", "G"),
+                    ("PG - Parental Guidance Suggested", "PG"),
+                    ("PG-13 Parents Strongly Cautioned", "PG-13"),
+                    ("NC-17 - Adults Only", "NC-17"),
+                ],
+                max_length=35,
+                null=True,
+            ),
         ),
     ]

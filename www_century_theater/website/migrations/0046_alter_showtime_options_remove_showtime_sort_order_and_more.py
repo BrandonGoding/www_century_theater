@@ -8,21 +8,23 @@ from django.utils.timezone import utc
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0045_showtime_movie_alter_showtime_show_date'),
+        ("website", "0045_showtime_movie_alter_showtime_show_date"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='showtime',
+            name="showtime",
             options={},
         ),
         migrations.RemoveField(
-            model_name='showtime',
-            name='sort_order',
+            model_name="showtime",
+            name="sort_order",
         ),
         migrations.AlterField(
-            model_name='showtime',
-            name='show_date',
-            field=models.DateField(default=datetime.datetime(2022, 3, 19, 1, 54, 20, 27604, tzinfo=utc)),
+            model_name="showtime",
+            name="show_date",
+            field=models.DateField(
+                default=datetime.datetime(2022, 3, 19, 1, 54, 20, 27604, tzinfo=utc)
+            ),
         ),
     ]

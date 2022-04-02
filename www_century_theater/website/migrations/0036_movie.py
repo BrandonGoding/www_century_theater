@@ -7,22 +7,48 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('wagtailimages', '0023_add_choose_permissions'),
-        ('blog', '0012_blogauthor_tagline'),
-        ('website', '0035_remove_showtime_page_delete_movie_delete_showtime'),
+        ("wagtailimages", "0023_add_choose_permissions"),
+        ("blog", "0012_blogauthor_tagline"),
+        ("website", "0035_remove_showtime_page_delete_movie_delete_showtime"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Movie',
+            name="Movie",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('youtube_id', models.CharField(blank=True, max_length=25, null=True)),
-                ('imdb_id', models.CharField(blank=True, max_length=25, null=True)),
-                ('open_date', models.DateField(blank=True, null=True)),
-                ('close_date', models.DateField(blank=True, null=True)),
-                ('featured_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image')),
-                ('review_page', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='blog.blogpage')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("youtube_id", models.CharField(blank=True, max_length=25, null=True)),
+                ("imdb_id", models.CharField(blank=True, max_length=25, null=True)),
+                ("open_date", models.DateField(blank=True, null=True)),
+                ("close_date", models.DateField(blank=True, null=True)),
+                (
+                    "featured_image",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailimages.image",
+                    ),
+                ),
+                (
+                    "review_page",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="blog.blogpage",
+                    ),
+                ),
             ],
         ),
     ]

@@ -11,63 +11,128 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('wagtailcore', '0066_collection_management_permissions'),
-        ('wagtailimages', '0023_add_choose_permissions'),
+        ("wagtailcore", "0066_collection_management_permissions"),
+        ("wagtailimages", "0023_add_choose_permissions"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BlogAuthor',
+            name="BlogAuthor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('bio', wagtail.core.fields.RichTextField(blank=True, null=True)),
-                ('website', models.URLField(blank=True, null=True)),
-                ('facebook', models.URLField(blank=True, null=True)),
-                ('twitter', models.URLField(blank=True, null=True)),
-                ('linkedin', models.URLField(blank=True, null=True)),
-                ('instagram', models.URLField(blank=True, null=True)),
-                ('image', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='wagtailimages.image')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("bio", wagtail.core.fields.RichTextField(blank=True, null=True)),
+                ("website", models.URLField(blank=True, null=True)),
+                ("facebook", models.URLField(blank=True, null=True)),
+                ("twitter", models.URLField(blank=True, null=True)),
+                ("linkedin", models.URLField(blank=True, null=True)),
+                ("instagram", models.URLField(blank=True, null=True)),
+                (
+                    "image",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="wagtailimages.image",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Blog Author',
-                'verbose_name_plural': 'Blog Authors',
+                "verbose_name": "Blog Author",
+                "verbose_name_plural": "Blog Authors",
             },
         ),
         migrations.CreateModel(
-            name='BlogCategory',
+            name="BlogCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('slug', models.SlugField(allow_unicode=True, help_text='A slug to identify posts by this category', max_length=255, verbose_name='slug')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "slug",
+                    models.SlugField(
+                        allow_unicode=True,
+                        help_text="A slug to identify posts by this category",
+                        max_length=255,
+                        verbose_name="slug",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Blog Category',
-                'verbose_name_plural': 'Blog Categories',
-                'ordering': ['name'],
+                "verbose_name": "Blog Category",
+                "verbose_name_plural": "Blog Categories",
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='BlogRollPage',
+            name="BlogRollPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
         migrations.CreateModel(
-            name='BlogPage',
+            name="BlogPage",
             fields=[
-                ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.page')),
-                ('content', wagtail.core.fields.RichTextField(blank=True, null=True)),
-                ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='blog.blogauthor')),
-                ('categories', modelcluster.fields.ParentalManyToManyField(blank=True, to='blog.blogcategory')),
+                (
+                    "page_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="wagtailcore.page",
+                    ),
+                ),
+                ("content", wagtail.core.fields.RichTextField(blank=True, null=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="blog.blogauthor",
+                    ),
+                ),
+                (
+                    "categories",
+                    modelcluster.fields.ParentalManyToManyField(
+                        blank=True, to="blog.blogcategory"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
-            bases=('wagtailcore.page',),
+            bases=("wagtailcore.page",),
         ),
     ]

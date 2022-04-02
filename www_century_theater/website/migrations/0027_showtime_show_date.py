@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0026_alter_showtime_show_time'),
+        ("website", "0026_alter_showtime_show_time"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='showtime',
-            name='show_date',
+            model_name="showtime",
+            name="show_date",
             field=models.DateField(default=datetime.date(2022, 3, 14)),
         ),
     ]

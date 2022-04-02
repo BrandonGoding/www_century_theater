@@ -11,14 +11,14 @@ class ParallaxBlock(blocks.StructBlock):
         blocks.StructBlock(
             [
                 ("link_text", blocks.CharBlock(max_length=25, required=False)),
-                ("link_page", PageChooserBlock(required=False))
+                ("link_page", PageChooserBlock(required=False)),
             ]
         )
     )
 
     class Meta:
-        icon = 'edit'
-        template = 'streams/parallax_block.html'
+        icon = "edit"
+        template = "streams/parallax_block.html"
 
 
 class FeaturesListBlock(blocks.StructBlock):
@@ -28,7 +28,7 @@ class FeaturesListBlock(blocks.StructBlock):
             [
                 ("feature_name", blocks.CharBlock(max_length=25, required=True)),
                 ("feature_summary", blocks.CharBlock(max_length=255, required=True)),
-                ("icon_id", blocks.CharBlock(max_length=24, required=False))
+                ("icon_id", blocks.CharBlock(max_length=24, required=False)),
             ]
         )
     )
@@ -46,7 +46,7 @@ class TeamHighlightBlock(blocks.StructBlock):
                 ("full_name", blocks.CharBlock(max_length=25, required=True)),
                 ("position", blocks.CharBlock(max_length=25, required=True)),
                 ("team_member_photo", ImageChooserBlock(required=True)),
-                ("bio_page", blocks.URLBlock(required=False))
+                ("bio_page", blocks.URLBlock(required=False)),
             ]
         )
     )
@@ -57,7 +57,6 @@ class TeamHighlightBlock(blocks.StructBlock):
 
 
 class RecentPostsBlock(blocks.StructBlock):
-
     class Meta:
         icon = "edit"
         template = "streams/recent_post_block.html"
@@ -70,7 +69,7 @@ class StudiosBlock(blocks.StructBlock):
             [
                 ("name", blocks.CharBlock(max_length=25, required=True)),
                 ("logo", ImageChooserBlock(required=True)),
-                ("website", blocks.URLBlock(required=True))
+                ("website", blocks.URLBlock(required=True)),
             ]
         )
     )

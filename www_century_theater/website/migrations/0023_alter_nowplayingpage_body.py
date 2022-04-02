@@ -9,13 +9,87 @@ import wagtail.images.blocks
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('website', '0022_alter_basicpage_body_alter_nowplayingpage_body'),
+        ("website", "0022_alter_basicpage_body_alter_nowplayingpage_body"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='nowplayingpage',
-            name='body',
-            field=wagtail.core.fields.StreamField([('feature_list_section', wagtail.core.blocks.StructBlock([('feature', wagtail.core.blocks.ListBlock(wagtail.core.blocks.StructBlock([('feature_name', wagtail.core.blocks.CharBlock(max_length=25, required=True)), ('feature_summary', wagtail.core.blocks.CharBlock(max_length=255, required=True)), ('icon_id', wagtail.core.blocks.CharBlock(max_length=24, required=False))])))])), ('recent_post_section', wagtail.core.blocks.StructBlock([])), ('studio_logo_section', wagtail.core.blocks.StructBlock([('studios', wagtail.core.blocks.ListBlock(wagtail.core.blocks.StructBlock([('name', wagtail.core.blocks.CharBlock(max_length=25, required=True)), ('logo', wagtail.images.blocks.ImageChooserBlock(required=True)), ('website', wagtail.core.blocks.URLBlock(required=True))])))]))], blank=True, null=True),
+            model_name="nowplayingpage",
+            name="body",
+            field=wagtail.core.fields.StreamField(
+                [
+                    (
+                        "feature_list_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "feature",
+                                    wagtail.core.blocks.ListBlock(
+                                        wagtail.core.blocks.StructBlock(
+                                            [
+                                                (
+                                                    "feature_name",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=25, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "feature_summary",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=255, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "icon_id",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=24, required=False
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    ),
+                                )
+                            ]
+                        ),
+                    ),
+                    ("recent_post_section", wagtail.core.blocks.StructBlock([])),
+                    (
+                        "studio_logo_section",
+                        wagtail.core.blocks.StructBlock(
+                            [
+                                (
+                                    "studios",
+                                    wagtail.core.blocks.ListBlock(
+                                        wagtail.core.blocks.StructBlock(
+                                            [
+                                                (
+                                                    "name",
+                                                    wagtail.core.blocks.CharBlock(
+                                                        max_length=25, required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "logo",
+                                                    wagtail.images.blocks.ImageChooserBlock(
+                                                        required=True
+                                                    ),
+                                                ),
+                                                (
+                                                    "website",
+                                                    wagtail.core.blocks.URLBlock(
+                                                        required=True
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    ),
+                                )
+                            ]
+                        ),
+                    ),
+                ],
+                blank=True,
+                null=True,
+            ),
         ),
     ]

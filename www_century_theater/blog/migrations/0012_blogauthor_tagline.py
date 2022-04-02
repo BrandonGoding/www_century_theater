@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0011_blogauthor_slug'),
+        ("blog", "0011_blogauthor_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogauthor',
-            name='tagline',
-            field=models.CharField(default='This is a tagline please update it.', max_length=120),
+            model_name="blogauthor",
+            name="tagline",
+            field=models.CharField(
+                default="This is a tagline please update it.", max_length=120
+            ),
         ),
     ]

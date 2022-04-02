@@ -7,17 +7,23 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0012_blogauthor_tagline'),
+        ("blog", "0012_blogauthor_tagline"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='blogpage',
-            name='categories',
+            model_name="blogpage",
+            name="categories",
         ),
         migrations.AddField(
-            model_name='blogpage',
-            name='categories',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='blog.blogcategory'),
+            model_name="blogpage",
+            name="categories",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="+",
+                to="blog.blogcategory",
+            ),
         ),
     ]

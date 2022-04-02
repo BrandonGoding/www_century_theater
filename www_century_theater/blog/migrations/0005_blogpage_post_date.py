@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0004_blogauthorspage'),
+        ("blog", "0004_blogauthorspage"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpage',
-            name='post_date',
-            field=models.DateField(auto_created=True, default='2022-01-02'),
+            model_name="blogpage",
+            name="post_date",
+            field=models.DateField(auto_created=True, default="2022-01-02"),
             preserve_default=False,
         ),
     ]
