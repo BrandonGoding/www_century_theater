@@ -1,0 +1,86 @@
+{% extends 'website/base.html' %}
+{% load wagtailcore_tags static %}
+
+{% block extra_css %}
+    <style type="text/css">
+        header {
+          padding-top: 9.5rem;
+          padding-bottom: 6rem;
+        }
+
+        section {
+          padding-top: 2rem;
+          padding-bottom: 2rem;
+        }
+        .map-container{
+            overflow:hidden;
+            padding-bottom:56.25%;
+            position:relative;
+            height:0;
+        }
+        .map-container iframe{
+            left:0;
+            top:0;
+            height:100%;
+            width:100%;
+            position:absolute;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- Header-->
+    <header class="parallax text-white" style="background-image: url('{% static 'assets/img/background-img.png' %}');">
+        <div class="container px-4 text-center">
+            <h1 class="fw-bolder">{{ page.title }}</h1>
+        </div>
+    </header>
+     <section id="page-intro">
+        <div class="container px-4">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-lg-8">
+                    {{ self.intro|richtext }}
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact-form">
+        <div class="container px-4">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-md-3">
+                    <h4>Contact Info:</h4>
+                    <address class="mt-4">
+                        <strong>The Century Theater</strong>
+                        <br/>13 Hall Street,
+                        <br/>Fort Kent, Maine 04743
+                    </address>
+                    <a href="tel:2072315287" class="mb-4">(207) 231-5287</a>
+                </div>
+                <div class="col-md-5">
+                    <form class="form" action="{% pageurl page %}" method="POST">
+                        {% csrf_token %}
+                        {% for field in form.visible_fields %}
+                            <div class="form-group mb-4">
+                                {{ field.errors }}
+                                {{ field.label_tag }}{% if field.label_tag %}:{% endif %}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                        <input type="submit" class="btn btn-primary" value="Send Message"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact-map">
+        <div class="container">
+            <div class="row gx-4 justify-content-center">
+                <div class="col-md-8">
+                    <div id="map-container-google-1" class="z-depth-1-half map-container" style="height: 500px">
+                      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2708.3468847632216!2d-68.60061738419152!3d47.248919820610624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cbc51f52fb12591%3A0x23f74558bdab2b6e!2sThe%20Century%20Theater!5e0!3m2!1sen!2sus!4v1648863858304!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

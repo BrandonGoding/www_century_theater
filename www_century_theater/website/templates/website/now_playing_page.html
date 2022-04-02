@@ -28,7 +28,8 @@
     {% for movie in now_playing %}
         {% image movie.featured_image original as tmp_photo %}
         <div class="" >
-            <div class="parallax d-flex p-5 flex-row{% if not forloop.first %}-reverse{% endif %} justify-content-between align-items-center flex-wrap" style="height:600px;width:100%;background-color:rgba(0, 0, 0, .85);background-image:url('{% static 'assets/img/background-img.png' %}');background-blend-mode:overlay;background-size:cover;overflow: visible;">
+            <div class="parallax" style="height:600px;width:100%;background-color:rgba(0, 0, 0, .85);background-image:url('{% static 'assets/img/background-img.png' %}');background-blend-mode:overlay;background-size:cover;overflow: visible;">
+            <div class="container d-flex p-5 flex-row{% if not forloop.first and False %}-reverse{% endif %} justify-content-between align-items-center flex-wrap">
                 <div class="text-white flex-grow-1 text-center mb-4">
                     <h2>{{ movie.title }}</h2>
                     <h3>Opening: {{ movie.open_date }}<br />Closing: {{ movie.close_date }}</h3>
@@ -42,6 +43,7 @@
                         <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
                     </a>
                 </div>
+            </div>
             </div>
         </div>
         {% endfor %}

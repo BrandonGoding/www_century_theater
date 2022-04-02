@@ -77,20 +77,18 @@
                             {% if actor.name in imdb_title_data.stars %}
                                 <div class="col-md-4">
                                     <div class="card mb-4">
-                                        <img src="{{ actor.image }}" class="card-img-top">
                                         <div class="card-body">
                                             <h2 class="card-title h4">{{ actor.name }}</h2>
                                         </div>
+                                        <img src="{{ actor.image }}" class="card-img-top">
                                     </div>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     </div>
-
-
                 {% endif %}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 d-flex flex-column">
                 <h4 class="mt-4">Show Times:</h4>
                 <div class="row">
                     {% for showtime in showtimes %}
@@ -165,16 +163,16 @@
                     </div>
                 {% endif %}
                 {% if movie.youtube_id %}
-                    <div class="row mb-4">
-                        <div class="col">
-                            <div style="background-color:white;background-image:url('{{ tmp_photo.url }}');background-size:cover;">
-                                <a data-fancybox href="https://www.youtube.com/watch?v={{ movie.youtube_id }}"
-                                   style="width:100%;display: flex;justify-content: center;align-items: center;height:300px;">
-                                    <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
-                                </a>
-                            </div>
+
+                    <div class="d-flex flex-grow-1 flex-column justify-content-end pb-5">
+                        <div style="background-color:white;background-image:url('{{ tmp_photo.url }}');background-size:cover;background-position: center center;">
+                            <a data-fancybox href="https://www.youtube.com/watch?v={{ movie.youtube_id }}"
+                               style="width:100%;display: flex;justify-content: center;align-items: center;height:300px;">
+                                <i class="bi bi-youtube" style="font-size: 48pt;color:red;"></i>
+                            </a>
                         </div>
                     </div>
+
                 {% endif %}
                 {% if movie.review_page %}
                     <div class="row mb-4">

@@ -13,7 +13,12 @@
                         <!-- Post header-->
                         <header class="mb-4">
                             <!-- Post title-->
-                            <h1 class="fw-bolder mb-1">{{ self.title }}</h1>
+                            <h1 class="fw-bolder mb-1">{{ self.title }}
+                            {% for movie in self.movies.all %}
+                                <br /><small>(Review of {{ movie.title }})</small>
+                            {% endfor %}
+                            </h1>
+
                             <!-- Post meta content-->
                             <div class="text-muted fst-italic mb-2">Posted on {{ self.post_date|date:"l F d, Y"  }}{% if self.author %} by
                                 <a href="{% routablepageurl routable_target "recent_posts_by_author" self.author.slug %}">{{ self.author.full_name }}</a>{% endif %}</div>

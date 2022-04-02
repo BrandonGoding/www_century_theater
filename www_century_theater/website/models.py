@@ -1,5 +1,6 @@
 import datetime
 
+from django.forms import widgets
 from django.shortcuts import render, get_object_or_404
 from django.db import models
 from django.utils.text import slugify
@@ -8,8 +9,9 @@ from modelcluster.models import ClusterableModel
 from wagtail.admin.edit_handlers import StreamFieldPanel, FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, \
     FieldRowPanel
 from wagtail.api import APIField
+from wagtail.contrib.forms.models import AbstractFormField, AbstractEmailForm
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from wagtail.core.fields import StreamField
+from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
 
@@ -38,6 +40,55 @@ class BasicPage(Page):
         context = super(BasicPage, self).get_context(value)
         context['post_row'] = BlogPage.objects.order_by('-post_date').live()[:3]
         return context
+
+
+class FormField(AbstractFormField):
+    page = ParentalKey(
+        'ContactPage',
+        on_delete=models.CASCADE,
+        related_name='form_fields',
+    )
+
+
+class ContactPage(AbstractEmailForm):
+
+    template = "website/contact_form.html"
+    landing_page_template = "website/contact_form.html"
+
+    intro = RichTextField(blank=True)
+    thank_you_text = RichTextField(blank=True)
+
+    content_panels = AbstractEmailForm.content_panels + [
+        FieldPanel('intro'),
+        InlinePanel('form_fields', label='Form Fields'),
+        FieldPanel('thank_you_text'),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel('from_address', classname="col6"),
+                        FieldPanel('to_address', classname="col6"),
+                    ]
+                ),
+                FieldPanel("subject")
+            ],
+            heading="Email Settings"
+        ),
+    ]
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        for name, field in form.fields.items():
+            # here we want to adjust the widgets on each field
+            # if the field is a TextArea - adjust the rows
+            if isinstance(field.widget, widgets.Textarea):
+                field.widget.attrs.update({'rows': '5'})
+            # for all fields, get any existing CSS classes and add 'form-control'
+            # ensure the 'class' attribute is a string of classes with spaces
+            css_classes = field.widget.attrs.get('class', '').split()
+            css_classes.append('form-control')
+            field.widget.attrs.update({'class': ' '.join(css_classes)})
+        return form
 
 
 class ShowTime(models.Model):
@@ -75,7 +126,7 @@ class Movie(ClusterableModel):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='+',
+        related_name='movies',
     )
 
     def __str__(self):
@@ -211,16 +262,6 @@ class NowPlayingPage(RoutablePageMixin, Page):
                         "dates": show_dates
                     }
                 )
-
-
-        # for show_date in show_dates:
-        #     time_list = []
-        #     temp_dict = dict()
-        #     temp_dict['date'] = show_date
-        #     for time in ShowTime.objects.filter(show_date=show_date, movie_id=movie.id):
-        #         time_list.append(time.show_time)
-        #         temp_dict['times'] = time_list
-        #     showtimes.append(temp_dict)
 
         context['showtimes'] = show_week
 
