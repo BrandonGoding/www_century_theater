@@ -7,9 +7,10 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.search import index
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.snippets.models import register_snippet
-
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 @register_snippet
 class BlogAuthor(models.Model):
@@ -161,13 +162,25 @@ class BlogRollPage(RoutablePageMixin, Page):
         """
         View function for the current events page
         """
-        featured_post = BlogPage.objects.order_by("-post_date").live()[:1]
-        posts = BlogPage.objects.order_by("-post_date").live()[1:5]
+        post_list = BlogPage.objects.order_by("-first_published_at").live().public()
+
+        paginator = Paginator(post_list, 5)
+
+        page = request.GET.get('page')
+
+        try:
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            posts = paginator.page(1)
+        except EmptyPage:
+            posts = paginator.page(paginator.num_pages)
+
         return self.render(
             request,
             context_overrides={
-                "featured_post": featured_post,
-                "posts": posts,
+                "pagination": posts,
+                "featured_post": posts[:1],
+                "posts": posts[1:5],
             },
         )
 
@@ -332,6 +345,11 @@ class BlogPage(Page):
 
     parent_page_types = ["blog.BlogRollPage"]
     subpage_types = []
+
+    search_fields = Page.search_fields + [
+        index.SearchField('title'),
+        index.SearchField('content'),
+    ]
 
     def get_context(self, request, *args, **kwargs):
         context = super(BlogPage, self).get_context(request)
