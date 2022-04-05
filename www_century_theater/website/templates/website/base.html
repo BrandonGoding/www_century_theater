@@ -12,14 +12,13 @@
     <link href="{% static 'assets/css/century_styles.css' %}" rel="stylesheet" />
     {% block extra_css %}
     {% endblock %}
-
     <title>{{ self.title }}</title>
-
-
+  {% include "wagtailseo/meta.html" %}
 
 </head>
 <body>
 {% wagtailuserbar %}
+{% include "wagtailseo/struct_data.html" %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="/">The Century Theater</a>

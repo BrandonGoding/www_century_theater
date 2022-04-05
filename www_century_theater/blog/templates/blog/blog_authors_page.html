@@ -1,9 +1,6 @@
 {% extends 'website/base.html' %}
 {% load static wagtailimages_tags wagtailroutablepage_tags %}
-
-
 {% block content %}
-
  <!-- Page header with logo and tagline-->
         <header class="py-5 bg-light border-bottom mb-4">
             <div class="container">
@@ -19,10 +16,8 @@
                 <!-- Blog entries-->
                 <div class="col-lg-8">
                     <!-- Featured blog post-->
-                    {% for post in posts %}
-                        {% if not forloop.counter|divisibleby:2 %}
-                        <div class="row">
-                        {% endif %}
+                    <div class="row">
+                        {% for post in posts %}
                         <div class="col-lg-6">
                             <div class="card mb-4">
                                 <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-400x350-c20 class="card-img-top" %}</a>
@@ -34,10 +29,8 @@
                                 </div>
                             </div>
                         </div>
-                        {% if forloop.counter|divisibleby:2 or forloop.last %}
-                        </div>
-                        {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">

@@ -20,6 +20,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtailseo.models import SeoMixin
 
 from blog.models import BlogPage
 from streams.blocks import (
@@ -36,7 +37,7 @@ import requests
 from decouple import config
 
 
-class BasicPage(Page):
+class BasicPage(SeoMixin, Page):
     body = StreamField(
         [
             ("parallax_section", ParallaxBlock()),
@@ -51,6 +52,8 @@ class BasicPage(Page):
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),
     ]
+
+    promote_panels = SeoMixin.seo_panels
 
     def get_context(self, value, *args, **kwargs):
         context = super(BasicPage, self).get_context(value)
@@ -71,11 +74,9 @@ class ContactPage(AbstractEmailForm):
     template = "website/contact_form.html"
     landing_page_template = "website/contact_form.html"
 
-    intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
 
     content_panels = AbstractEmailForm.content_panels + [
-        FieldPanel("intro"),
         InlinePanel("form_fields", label="Form Fields"),
         FieldPanel("thank_you_text"),
         MultiFieldPanel(

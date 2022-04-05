@@ -11,6 +11,8 @@ from wagtail.search import index
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.snippets.models import register_snippet
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from wagtailseo.models import SeoMixin, SeoType
+
 
 @register_snippet
 class BlogAuthor(models.Model):
@@ -272,7 +274,7 @@ class BlogRollPage(RoutablePageMixin, Page):
         )
 
 
-class BlogPage(Page):
+class BlogPage(SeoMixin, Page):
     author = models.ForeignKey(
         to=BlogAuthor, null=True, blank=True, on_delete=models.SET_NULL
     )
@@ -342,6 +344,9 @@ class BlogPage(Page):
             heading="Featured Image",
         ),
     ]
+
+    seo_content_type = SeoType.ARTICLE
+    promote_panels = SeoMixin.seo_panels
 
     parent_page_types = ["blog.BlogRollPage"]
     subpage_types = []
