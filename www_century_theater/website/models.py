@@ -60,6 +60,15 @@ class BasicPage(SeoMixin, Page):
         context["post_row"] = BlogPage.objects.order_by("-post_date").live()[:3]
         return context
 
+    @property
+    def seo_struct_org_dict(self) -> dict:
+        sd_dict = super().seo_struct_org_dict
+        sd_dict.update({
+            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
+        })
+
+        return sd_dict
+
 
 class FormField(AbstractFormField):
     page = ParentalKey(

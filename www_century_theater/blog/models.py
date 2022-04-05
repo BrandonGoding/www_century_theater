@@ -368,3 +368,12 @@ class BlogPage(SeoMixin, Page):
             .live()[:3]
         )
         return context
+
+    @property
+    def seo_struct_org_dict(self) -> dict:
+        sd_dict = super().seo_struct_org_dict
+        sd_dict.update({
+            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
+        })
+
+        return sd_dict
