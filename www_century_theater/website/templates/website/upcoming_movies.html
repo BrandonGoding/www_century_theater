@@ -95,7 +95,7 @@
                         url: '{% routablepageurl page 'movie_detail_page' movie.slug %}',
                         extendedProps: {
                             featuredImage: '{{ tmp_photo.url }}',
-                            dateRange: 'Playing: {{ movie.open_date|date:"F d, Y" }} - {{ movie.close_date|date:"F d, Y" }} {% if not movie.confirmed %}<em>Unconfirmed</em>{% endif %}'
+                            dateRange: 'Playing: {{ movie.open_date|date:"F d, Y" }} - {{ movie.close_date|date:"F d, Y" }} {% if not movie.confirmed %}UNCONFIRMED{% endif %}'
                         },
                     },
                     {% endfor %}

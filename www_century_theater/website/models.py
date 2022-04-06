@@ -78,8 +78,8 @@ class FormField(AbstractFormField):
     )
 
 
-class ContactPage(AbstractEmailForm):
-
+class ContactPage(SeoMixin, AbstractEmailForm):
+    max_count = 1
     template = "website/contact_form.html"
     landing_page_template = "website/contact_form.html"
 
@@ -101,6 +101,15 @@ class ContactPage(AbstractEmailForm):
             heading="Email Settings",
         ),
     ]
+
+    promote_panels = SeoMixin.seo_panels
+
+    @property
+    def seo_struct_org_dict(self) -> dict:
+        sd_dict = super().seo_struct_org_dict
+        sd_dict.update({
+            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
+        })
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
@@ -208,7 +217,7 @@ class Movie(ClusterableModel):
     api_fields = [APIField("youtube_id"), APIField("imdb_id")]
 
 
-class NowPlayingPage(RoutablePageMixin, Page):
+class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
     body = StreamField(
         [
             ("feature_list_section", FeaturesListBlock()),
@@ -223,7 +232,16 @@ class NowPlayingPage(RoutablePageMixin, Page):
         StreamFieldPanel("body"),
     ]
 
+    promote_panels = SeoMixin.seo_panels
+
     max_count = 1
+
+    @property
+    def seo_struct_org_dict(self) -> dict:
+        sd_dict = super().seo_struct_org_dict
+        sd_dict.update({
+            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
+        })
 
     @property
     def first_day_of_week(self):
@@ -265,6 +283,14 @@ class NowPlayingPage(RoutablePageMixin, Page):
             json.dump(title_dict, f)
         f.close()
         return title_dict.get("data")
+
+    @route(r"^search/$")
+    def post_search(self, request, *args, **kwargs):
+        search_query = request.GET.get("q", None)
+        self.posts = self.get_posts()
+        if search_query:
+            self.posts = self.posts.search(search_query)
+        return self.render(request)
 
     @route(r"^(?P<slug>[-\w]*)/detail/$")
     def movie_detail_page(self, request, slug, *args, **kwargs):
