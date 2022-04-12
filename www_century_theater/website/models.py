@@ -264,7 +264,7 @@ class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
     def get_context(self, value, *args, **kwargs):
         context = super(NowPlayingPage, self).get_context(value)
         context["now_playing"] = Movie.objects.filter(
-            close_date__gte=self.first_day_of_week
+            close_date__gte=self.first_day_of_week, open_date__lt=self.last_day_of_week
         ).order_by("open_date")[:2]
         return context
 

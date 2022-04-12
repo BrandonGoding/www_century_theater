@@ -28,7 +28,9 @@
                             {% endfor %}
                         </header>
                         <!-- Preview image figure-->
-                        <figure class="mb-4">{% image self.featured_image fill-900x400-c75 class="img-fluid rounded" %}</figure>
+                        {% image self.featured_image original format-webp as webp_image %}
+                        <figure class="mb-4" style="height:350px;width:100%;background-image:url('{{ webp_image.url }}');background-position: center center;background-size:cover;">
+                        </figure>
                         <!-- Post content-->
                         <section class="mb-5">
                             {{ self.content|safe }}

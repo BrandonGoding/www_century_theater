@@ -15,8 +15,8 @@
 
 {% block content %}
 
-    {% image author.image width-400 as tmp_photo %}
-    {% image author.image fill-200x200-c50 as author_photo %}
+    {% image author.image width-400 format-webp-lossless as tmp_photo %}
+    {% image author.image fill-200x200-c50 format-webp-lossless as author_photo %}
 
      <!-- Page Header-->
         <header class="masthead" style="background-image: url('{{ tmp_photo.url }}');background-color:#425b76;background-blend-mode:multiply;">

@@ -28,7 +28,7 @@
                 <h2>Up Next:</h2>
                 {% for movie in up_next %}
                 <div class="card mt-4 mb-4">
-                    {% image movie.featured_image fill-286x180 class="card-img-top" %}
+                    {% image movie.featured_image height-286 class="card-img-top" %}
                     <div class="card-body">
                         <div class="small text-muted">{{ movie.open_date|date:"l F d, Y" }}</div>
                         <h3 class="card-title h5">{{ movie.title }}</h3>

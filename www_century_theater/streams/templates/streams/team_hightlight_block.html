@@ -7,7 +7,7 @@
                     {% for person in self.team %}
                     <div class="col-lg-3" style="margin-bottom:75px;">
                         <div class="testimonial-item mx-auto mb-5 mb-lg-0">
-                            {% image person.team_member_photo fill-150x150-c100 as tmp_photo %}
+                            {% image person.team_member_photo fill-150x150-c100 format-webp-lossless as tmp_photo %}
                             {% if person.bio_page %}
                             <a href="{{ person.bio_page }}">
                             {% endif %}

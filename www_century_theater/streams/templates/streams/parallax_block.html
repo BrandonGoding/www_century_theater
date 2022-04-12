@@ -1,5 +1,5 @@
 {% load wagtailimages_tags %}
-{% image self.background_image original as tmp_photo %}
+{% image self.background_image original format-webp-lossless as tmp_photo %}
 
 <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
     <h1>{{ self.header }}</h1>

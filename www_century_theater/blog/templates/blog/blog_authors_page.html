@@ -20,7 +20,7 @@
                         {% for post in posts %}
                         <div class="col-lg-6">
                             <div class="card mb-4">
-                                <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-400x350-c20 class="card-img-top" %}</a>
+                                <a href="{% routablepageurl page "recent_posts_by_author" post.slug %}">{% image post.image fill-400x350-c20 format-webp-lossless class="card-img-top" %}</a>
                                 <div class="card-body">
                                     <div class="small text-muted">{{ post.tagline }}</div>
                                     <h2 class="card-title h4">{{ post.full_name }}</h2>

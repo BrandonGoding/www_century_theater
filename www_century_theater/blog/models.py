@@ -164,7 +164,8 @@ class BlogRollPage(RoutablePageMixin, Page):
         """
         View function for the current events page
         """
-        post_list = BlogPage.objects.order_by("-first_published_at").live().public()
+        #post_list = BlogPage.objects.order_by("-first_published_at").live().public()
+        post_list = BlogPage.objects.order_by("-post_date").live().public()
 
         paginator = Paginator(post_list, 5)
 

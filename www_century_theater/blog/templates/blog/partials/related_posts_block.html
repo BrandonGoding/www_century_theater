@@ -4,7 +4,9 @@
         {% for post in related_posts %}
         <div class="col-lg-4">
             <div class="card mb-4">
-                <a href="{{ post.url }}">{% image post.featured_image fill-451x299-c50 class="card-img-top" %}</a>
+                {% image post.featured_image original format-webp as webp_image %}
+                <a href="{{ post.url }}" style="height:200px;width:100%;background-image:url('{{ webp_image.url }}');background-position: center center;background-size:cover;">
+                </a>
                 <div class="card-body">
                     <div class="small text-muted">{{ post.post_date|date:"l F d, Y"  }}</div>
                     <h2 class="card-title h4">{{ post.title }}</h2>
