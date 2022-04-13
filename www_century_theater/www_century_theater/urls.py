@@ -15,15 +15,23 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
 from django.urls import path, include, re_path
 
 from wagtail.core import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.contrib.sitemaps.views import sitemap
+
+
+def heart_beat(request):
+    return HttpResponse(status=200)
 
 
 urlpatterns = [
-    path("__debug__/", include("debug_toolbar.urls")),
+    path("heart-beat", heart_beat),
+    path('sitemap.xml', sitemap),
+    #path("__debug__/", include("debug_toolbar.urls")),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     re_path(r"", include(wagtail_urls)),

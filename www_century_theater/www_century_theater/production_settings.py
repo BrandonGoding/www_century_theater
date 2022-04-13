@@ -25,7 +25,25 @@ ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(",")]
 )
 
+ALLOWED_CIDR_NETS = ["10.0.0.0/16"]
+
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.century.theater",
+    "https://cdn.century.theater",
+]
+
+CORS_ORIGIN_ALLOW_ALL = False
+
 INSTALLED_APPS = [
+    "blog.apps.BlogConfig",
+    "streams.apps.StreamsConfig",
+    "website.apps.WebsiteConfig",
     "wagtailseo",
     "wagtail.contrib.settings",
     "wagtail.contrib.forms",
@@ -43,18 +61,18 @@ INSTALLED_APPS = [
     "wagtail.core",
     "modelcluster",
     "taggit",
-    "blog.apps.BlogConfig",
-    "streams.apps.StreamsConfig",
-    "website.apps.WebsiteConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'storages',
+    "django.contrib.sitemaps",
 ]
 
 MIDDLEWARE = [
+    'allow_cidr.middleware.AllowCIDRMiddleware',
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -63,7 +81,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "www_century_theater.urls"
@@ -121,12 +138,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)  # new
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -142,3 +153,34 @@ WAGTAILSEARCH_BACKENDS = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+
+if config("USE_S3"):
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+
+    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_CUSTOM_DOMAIN = config("AWS_S3_CUSTOM_DOMAIN")
+    AWS_LOCATION = 'static'
+    DEFAULT_FILE_STORAGE = 'website.custom_storage.MediaStorage'
+    STATICFILES_STORAGE = 'website.custom_storage.StaticStorage'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
+
+
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+    MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_URL = "/static/"
+    STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)  # new
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = "/media/"

@@ -3,3 +3,7 @@ wagtail
 python-decouple
 PyMySQL
 wagtail-seo
+boto3
+django-storages
+django-allow-cidr
+django-cors-headers

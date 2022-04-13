@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
+    'storages',
+    "django.contrib.sitemaps",
 ]
 
 MIDDLEWARE = [
@@ -121,14 +123,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-#
-# STATIC_URL = 'static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = "/static/"
-STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)  # new
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -145,3 +139,33 @@ WAGTAILSEARCH_BACKENDS = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+if config("USE_S3"):
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+
+    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_CUSTOM_DOMAIN = config("AWS_S3_CUSTOM_DOMAIN")
+    AWS_LOCATION = 'static'
+    DEFAULT_FILE_STORAGE = 'website.custom_storage.MediaStorage'
+    STATICFILES_STORAGE = 'website.custom_storage.StaticStorage'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
+
+
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+    MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_URL = "/static/"
+    STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)  # new
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = "/media/"

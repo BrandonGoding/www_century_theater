@@ -5,3 +5,5 @@ PyMySQL
 django-debug-toolbar
 black
 wagtail-seo
+boto3
+django-storages
