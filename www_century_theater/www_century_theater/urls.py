@@ -31,7 +31,7 @@ def heart_beat(request):
 urlpatterns = [
     path("heart-beat", heart_beat),
     path('sitemap.xml', sitemap),
-    #path("__debug__/", include("debug_toolbar.urls")),
+    path("__debug__/", include("debug_toolbar.urls")),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     re_path(r"", include(wagtail_urls)),

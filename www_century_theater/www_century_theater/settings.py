@@ -140,7 +140,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-if config("USE_S3"):
+if False:
     AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 
@@ -165,7 +165,6 @@ if config("USE_S3"):
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATIC_URL = "/static/"
-    STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)  # new
 
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
