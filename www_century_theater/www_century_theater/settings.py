@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'storages',
     "django.contrib.sitemaps",
+    "compressor"
 ]
 
 MIDDLEWARE = [
@@ -168,3 +169,14 @@ else:
 
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
+
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder'
+]
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
