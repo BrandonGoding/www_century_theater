@@ -1,11 +1,11 @@
 from wagtail.core import blocks
-from wagtail.core.blocks import PageChooserBlock
+from wagtail.core.blocks import PageChooserBlock, RichTextBlock
 from wagtail.images.blocks import ImageChooserBlock
 
 
 class ParallaxBlock(blocks.StructBlock):
     header = blocks.CharBlock(max_length=30, required=False)
-    sub_header = blocks.CharBlock(max_length=250, required=False)
+    sub_header = RichTextBlock(features=["h2", "h3", "h4", "h5", "h6", "bold", "italic"])
     background_image = ImageChooserBlock(required=True)
     links = blocks.ListBlock(
         blocks.StructBlock(
