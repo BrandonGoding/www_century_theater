@@ -7,3 +7,5 @@ boto3
 django-storages
 django-allow-cidr
 django-cors-headers
+django_compressor
+django-libsass

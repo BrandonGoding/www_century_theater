@@ -7,3 +7,5 @@ black
 wagtail-seo
 boto3
 django-storages
+django_compressor
+django-libsass
