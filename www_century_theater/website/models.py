@@ -20,6 +20,7 @@ from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page, Orderable
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.snippets.models import register_snippet
 from wagtailseo.models import SeoMixin
 
 from blog.models import BlogPage
@@ -63,9 +64,14 @@ class BasicPage(SeoMixin, Page):
     @property
     def seo_struct_org_dict(self) -> dict:
         sd_dict = super().seo_struct_org_dict
-        sd_dict.update({
-            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
-        })
+        sd_dict.update(
+            {
+                "sameAs": [
+                    "https://www.facebook.com/TheCenturyTheater/",
+                    "https://www.instagram.com/thecenturytheater/",
+                ]
+            }
+        )
 
         return sd_dict
 
@@ -78,7 +84,7 @@ class FormField(AbstractFormField):
     )
 
 
-class ContactPage(SeoMixin, AbstractEmailForm):
+class ContactPage(AbstractEmailForm):
     max_count = 1
     template = "website/contact_form.html"
     landing_page_template = "website/contact_form.html"
@@ -102,15 +108,6 @@ class ContactPage(SeoMixin, AbstractEmailForm):
         ),
     ]
 
-    promote_panels = SeoMixin.seo_panels
-
-    @property
-    def seo_struct_org_dict(self) -> dict:
-        sd_dict = super().seo_struct_org_dict
-        sd_dict.update({
-            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
-        })
-
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
         for name, field in form.fields.items():
@@ -126,6 +123,23 @@ class ContactPage(SeoMixin, AbstractEmailForm):
         return form
 
 
+@register_snippet
+class Theater(models.Model):
+    name = models.CharField(max_length=25)
+
+    def __str__(self):
+        return self.name
+
+
+@register_snippet
+class Rate(models.Model):
+    name = models.CharField(max_length=25)
+    fee = models.DecimalField(max_digits=4, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.name} - ${self.fee}"
+
+
 class ShowTime(models.Model):
     """Between 1 and 5 images for the home page carousel."""
 
@@ -135,8 +149,16 @@ class ShowTime(models.Model):
     show_date = models.DateField(default=None)
     show_time = models.TimeField()
     matinee = models.BooleanField(default=False)
+    on_sale = models.BooleanField(default=False)
+    theater = models.ForeignKey(to=Theater, on_delete=models.SET_NULL, null=True, blank=True)
 
-    panels = [FieldPanel("show_date"), FieldPanel("show_time"), FieldPanel("matinee")]
+    panels = [
+        FieldPanel("show_date"),
+        FieldPanel("show_time"),
+        FieldPanel("theater"),
+        FieldPanel("matinee"),
+        FieldPanel("on_sale"),
+    ]
 
 
 class Movie(ClusterableModel):
@@ -172,6 +194,10 @@ class Movie(ClusterableModel):
     @property
     def last_day_for_calender(self):
         return self.close_date + datetime.timedelta(days=1)
+
+    @property
+    def get_description(self):
+        return NowPlayingPage.get_imdb_json(self).get("plot", False)
 
     def save(self, *args, **kwargs):
         value = self.title
@@ -217,7 +243,7 @@ class Movie(ClusterableModel):
     api_fields = [APIField("youtube_id"), APIField("imdb_id")]
 
 
-class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
+class NowPlayingPage(RoutablePageMixin, Page):
     body = StreamField(
         [
             ("feature_list_section", FeaturesListBlock()),
@@ -232,16 +258,7 @@ class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
         StreamFieldPanel("body"),
     ]
 
-    promote_panels = SeoMixin.seo_panels
-
     max_count = 1
-
-    @property
-    def seo_struct_org_dict(self) -> dict:
-        sd_dict = super().seo_struct_org_dict
-        sd_dict.update({
-            "sameAs": ["https://www.facebook.com/TheCenturyTheater/", "https://www.instagram.com/thecenturytheater/"]
-        })
 
     @property
     def first_day_of_week(self):
@@ -270,19 +287,55 @@ class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
 
     @staticmethod
     def get_imdb_json(movie):
-        title_dict = dict()
-        title_dict["data"] = requests.get(
-            f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{movie.imdb_id}"
-        ).json()
-        title_dict["timestamp"] = datetime.datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S.%f"
-        )
-        with open(
-            f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json", "w"
-        ) as f:
-            json.dump(title_dict, f)
-        f.close()
-        return title_dict.get("data")
+        if not os.path.exists(
+            f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json"
+        ):
+            title_dict = dict()
+            title_dict["data"] = requests.get(
+                f"https://imdb-api.com/en/API/Title/{config('imdb_api_key')}/{movie.imdb_id}"
+            ).json()
+            title_dict["timestamp"] = datetime.datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S.%f"
+            )
+            with open(
+                    f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json", "w"
+            ) as f:
+                json.dump(title_dict, f)
+            f.close()
+            return title_dict.get("data")
+        else:
+            f = open(f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json")
+            title_dict = json.load(f)
+            if (
+                datetime.datetime.fromisoformat(title_dict.get("timestamp"))
+                + datetime.timedelta(hours=24)
+                < datetime.datetime.now()
+            ):
+                os.remove(f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json")
+                NowPlayingPage.get_imdb_json(movie)
+            else:
+                return title_dict.get("data")
+            f.close()
+
+        # if not os.path.exists(
+        #     f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json"
+        # ):
+        #     response = requests.get(
+        #         f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{movie.imdb_id}"
+        #     ).json()
+        #     with open(
+        #         f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json",
+        #         "w",
+        #     ) as f:
+        #         json.dump(response, f)
+        #     f.close()
+        #     context["reviews"] = response
+        # else:
+        #     f = open(
+        #         f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json"
+        #     )
+        #     context["reviews"] = json.load(f)
+        #     f.close()
 
     @route(r"^search/$")
     def post_search(self, request, *args, **kwargs):
@@ -338,42 +391,8 @@ class NowPlayingPage(SeoMixin, RoutablePageMixin, Page):
         context["showtimes"] = show_week
 
         if movie.imdb_id:
-            if not os.path.exists(
-                f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json"
-            ):
-                context["imdb_title_data"] = self.get_imdb_json(movie)
-            else:
-                f = open(f"{django_settings.BASE_DIR}/cache/title_{movie.imdb_id}.json")
-                title_dict = json.load(f)
-                if (
-                    datetime.datetime.fromisoformat(title_dict.get("timestamp"))
-                    + datetime.timedelta(hours=24)
-                    < datetime.datetime.now()
-                ):
-                    context["imdb_title_data"] = self.get_imdb_json(movie)
-                else:
-                    context["imdb_title_data"] = title_dict.get("data")
-                f.close()
+            context["imdb_title_data"] = self.get_imdb_json(movie)
 
-            if not os.path.exists(
-                f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json"
-            ):
-                response = requests.get(
-                    f"https://imdb-api.com/en/API/Ratings/{config('imdb_api_key')}/{movie.imdb_id}"
-                ).json()
-                with open(
-                    f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json",
-                    "w",
-                ) as f:
-                    json.dump(response, f)
-                f.close()
-                context["reviews"] = response
-            else:
-                f = open(
-                    f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json"
-                )
-                context["reviews"] = json.load(f)
-                f.close()
         return render(request, "website/movie.html", context)
 
     @route(r"upcoming/$")

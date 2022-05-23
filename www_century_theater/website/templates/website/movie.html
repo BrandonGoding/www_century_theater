@@ -14,7 +14,7 @@
 
 {% block content %}
     {% image movie.featured_image original as tmp_photo %}
-    <div class="parallax" style="background-image:url('{{ tmp_photo.url }}')">
+    <div class="parallax" style="background-image:url('{{ tmp_photo.url }}');color:white;text-shadow: 2px 2px #000000;">
         <h1>{{ movie.title }}</h1>
         <h2>{% if imdb_title_data.tagline %}{{ imdb_title_data.tagline }} <br/>{% endif %}
             {% if imdb_title_data.contentRating %}<small>Rated: {{ imdb_title_data.contentRating }}</small>{% endif %}
@@ -31,7 +31,7 @@
     <div class="container">
         <div class="row mt-4">
             <div class="col-md-8 pb-4 d-flex  justify-content-between flex-column">
-                {% if imdb_title_data %}
+                {% if imdb_title_data.fullTitle %}
                     <div class="row">
                         <div class="col-md-4">
                             <img src="{{ imdb_title_data.image }}" class="img-fluid mt-4"/>
@@ -85,6 +85,14 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="row">
+                    <div class="col-md-6 m-auto">
+                        <h4 class="mt-4">&nbsp;</h4>
+                         <div class="alert alert-warning">Unable to pull in IMDB data.</div>
+                    </div>
+
                     </div>
                 {% endif %}
             </div>

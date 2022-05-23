@@ -5,7 +5,7 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-PRODUCTION_SETTINGS = config("PROD_SETTINGS", default=False, cast=bool)
+PRODUCTION_SETTINGS = config("PRODUCTION_SETTINGS", default=False, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "compressor"
 ]
-if not PRODUCTION_SETTINGS:
+if PRODUCTION_SETTINGS is False:
     INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE = [
@@ -72,13 +72,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-if PRODUCTION_SETTINGS:
+if PRODUCTION_SETTINGS is True:
     MIDDLEWARE = [
         'allow_cidr.middleware.AllowCIDRMiddleware',
     ] + MIDDLEWARE
+else:
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 
 ROOT_URLCONF = "www_century_theater.urls"
@@ -152,7 +153,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-if False:
+if PRODUCTION_SETTINGS is True:
+    COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+    COMPRESS_OFFLINE = True
+    LIBSASS_OUTPUT_STYLE = 'compressed'
     AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 
@@ -166,14 +170,12 @@ if False:
         'CacheControl': 'max-age=94608000',
     }
 
-
     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
     ]
     MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
-
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATIC_URL = "/static/"
@@ -189,5 +191,5 @@ STATICFILES_FINDERS = [
 ]
 
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'),
-)
+        ('text/x-scss', 'django_libsass.SassCompiler'),
+    )

@@ -2,8 +2,8 @@
 {% image self.background_image original format-webp-lossless as tmp_photo %}
 
 <div class="parallax" style="background-image:url('{{ tmp_photo.url }}');color:white;">
-    <h1>{{ self.header }}</h1>
-    {{ self.sub_header|richtext }}
+    <h1 style="padding:12px 24px;">{{ self.header }}</h1>
+    <div style="padding:12px 24px;text-align:center;">{{ self.sub_header|richtext }}</div>
     {% if self.links %}
         <div style="margin-top:50px;width:100%;max-width: 800px;display: flex;flex-direction: row; justify-content: space-evenly;">
             {% for link in self.links %}
