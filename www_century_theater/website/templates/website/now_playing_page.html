@@ -31,7 +31,7 @@
         <div class="col-md-6">
             <div class="flex-grow-1 bg-white rounded-2  mt-5 mb-5 d-flex p-5 flex-column{% if not forloop.first and False %}-reverse{% endif %} justify-content-between align-items-center flex-wrap">
                 <div class=" text-center mb-4">
-                    <h2 class="flex-grow-1">{{ movie.title }}</h2>
+                    <h2 class="flex-grow-1">{{ movie.html_title|safe }}</h2>
                     <h3 class="small">Opening: {{ movie.open_date }}<br />Closing: {{ movie.close_date }}</h3>
                     <a href="{% routablepageurl page 'movie_detail_page' movie.slug %}" class="btn btn-primary mb-2">More Info</a>
                     {% if movie.review_page %}

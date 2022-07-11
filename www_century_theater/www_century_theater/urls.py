@@ -36,6 +36,6 @@ urlpatterns = [
     re_path(r"", include(wagtail_urls)),
 ]
 
-if settings.DEBUG:
+if not settings.PRODUCTION_SETTINGS:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns.append(path("__debug__/", include("debug_toolbar.urls")))

@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 from decouple import config
 import pymysql
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 
 pymysql.install_as_MySQLdb()
 
@@ -16,6 +19,25 @@ ALLOWED_HOSTS = config(
 )
 
 if PRODUCTION_SETTINGS:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn="https://875a18e0e693493dbb7dc75c39c88c68@o1293628.ingest.sentry.io/6516595",
+        integrations=[
+            DjangoIntegration(),
+        ],
+
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
+
     ALLOWED_CIDR_NETS = ["10.0.0.0/16"]
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
@@ -58,9 +80,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'storages',
     "django.contrib.sitemaps",
-    "compressor"
 ]
-if PRODUCTION_SETTINGS is False:
+if not PRODUCTION_SETTINGS:
     INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE = [
@@ -74,7 +95,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if PRODUCTION_SETTINGS is True:
+if PRODUCTION_SETTINGS:
     MIDDLEWARE = [
         'allow_cidr.middleware.AllowCIDRMiddleware',
     ] + MIDDLEWARE
@@ -153,10 +174,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-if PRODUCTION_SETTINGS is True:
-    COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
-    COMPRESS_OFFLINE = True
-    LIBSASS_OUTPUT_STYLE = 'compressed'
+if PRODUCTION_SETTINGS:
+    # COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+    # COMPRESS_OFFLINE = True
+    # LIBSASS_OUTPUT_STYLE = 'compressed'
     AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 
@@ -182,14 +203,3 @@ else:
 
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
-
-
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder'
-]
-
-COMPRESS_PRECOMPILERS = (
-        ('text/x-scss', 'django_libsass.SassCompiler'),
-    )

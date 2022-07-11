@@ -96,33 +96,37 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="col-md-4 d-flex flex-column">
+            <div class="col-md-4">
                 <h4 class="mt-4">Show Times:</h4>
+
                 <div class="row">
+                <div class="col">
                     {% for showtime in showtimes %}
-                    <div class="col-md-6">
-                        <h5>Week {{ forloop.counter }}</h5>
-                        <ul>
-                    {% for showtime in showtime.dates %}
-                        <li class="mt-2">
-                            <h6>{{ showtime.date|date:"l, F j, Y" }}</h6>
-                            <ul>
+                        <div class="card mb-4 showtimes" data-position="{{ forloop.counter }}" style="display:{% if forloop.first %}block{% else %}none{% endif %};">
+                            <div class="card-header text-center"> Week {{ forloop.counter }}</div>
+                            {% for showtime in showtime.dates %}
+                                <h5 class="mt-2" style="text-align: center;width:100%;margin:auto;">{{ showtime.date|date:"l, F j, Y" }}</h5>
+                                <h6 style="margin-bottom:15px;">
                                 {% for time in showtime.times %}
-                                    <li>
-                                        {{ time|date:"g:i A" }}
-                                    </li>
+                                    {{ time|date:"g:i A" }}{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
-                            </ul>
-                        </li>
-                    {% endfor %}
-                </ul>
-                    </div>
+                                </h6>
+                            {% endfor %}
+                            <div class="btn-group justify-content-center align-items-center flex-grow-1" style="width:100%;margin-bottom:5px;">
+                                {% if not forloop.first %}
+                                <button class="back-button btn btn-outline-primary"><i class="bi bi-caret-left"></i> Previous Week</button>
+                                {% endif %}
+                                {% if not forloop.last %}
+                                <button class="forward-button btn btn-outline-success"><i class="bi bi-caret-right"></i> Next Week</button>
+                                {% endif %}
+                            </div>
+                        </div>
                         {% empty %}
                         <div class="alert alert-danger text-center">Check Back For Show Times!</div>
                 {% endfor %}
                 </div>
 
-
+                </div>
                 {% if reviews.imDb or reviews.metacritic or reviews.theMovieDb or reviews.rottenTomatoes or reviews.filmAffinity %}
                     <div class="row mt-4 mb-4">
                         <div class="col">
@@ -206,4 +210,26 @@
     {% if movie.youtube_id %}
         <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
     {% endif %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+    $('.forward-button').on('click', function(e){
+        let parent_div = $(this).closest('.showtimes');
+        if(parent_div.next()){
+            parent_div.hide();
+            parent_div.next().show();
+        }
+    });
+
+    $('.back-button').on('click', function(e){
+        let parent_div = $(this).closest('.showtimes');
+        if(parent_div.prev()){
+            parent_div.hide();
+            parent_div.prev().show();
+        }
+    });
+
+    </script>
 {% endblock %}

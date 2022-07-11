@@ -199,6 +199,10 @@ class Movie(ClusterableModel):
     def get_description(self):
         return NowPlayingPage.get_imdb_json(self).get("plot", False)
 
+    @property
+    def html_title(self):
+        return self.title.replace(": ", ":<br/>")
+
     def save(self, *args, **kwargs):
         value = self.title
         self.slug = slugify(value, allow_unicode=True)
@@ -263,18 +267,16 @@ class NowPlayingPage(RoutablePageMixin, Page):
     @property
     def first_day_of_week(self):
         current_day = datetime.date.today()
+        while current_day.weekday() != 4:
+            current_day = current_day - datetime.timedelta(days=1)
         return (
             current_day
-            - datetime.timedelta(days=current_day.weekday())
-            + datetime.timedelta(days=4)
         )
 
     @property
     def last_day_of_week(self):
-        current_day = datetime.date.today()
         return (
-            current_day
-            - datetime.timedelta(days=current_day.weekday())
+            self.first_day_of_week
             + datetime.timedelta(days=6)
         )
 
@@ -329,12 +331,10 @@ class NowPlayingPage(RoutablePageMixin, Page):
         #     ) as f:
         #         json.dump(response, f)
         #     f.close()
-        #     context["reviews"] = response
         # else:
         #     f = open(
         #         f"{django_settings.BASE_DIR}/cache/reviews_{movie.imdb_id}.json"
         #     )
-        #     context["reviews"] = json.load(f)
         #     f.close()
 
     @route(r"^search/$")
